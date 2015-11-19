@@ -1,0 +1,9 @@
+name: 広告効果測定プラグイン
+event: Event
+code: AdManage
+version: 1.0.0
+service:
+  - AdManageServiceProvider
+orm.path:
+  - /Resource/doctrine
+  - /Resource/doctrine/master
