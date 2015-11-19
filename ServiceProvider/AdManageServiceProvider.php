@@ -19,7 +19,6 @@ class AdManageServiceProvider implements ServiceProviderInterface
             $this->initForm($app);
             $this->initDoctrine($app);
             $this->initTranslator($app);
-            $this->initRendering($app);
             $this->initPluginEventDispatcher($app);
         }
     }
@@ -59,53 +58,31 @@ class AdManageServiceProvider implements ServiceProviderInterface
 
     public function initRoute(BaseApplication $app)
     {
-//        $app->match('/admin/product/column', '\Plugin\AddProductColumns\Controller\ColumnController::index')
-//            ->bind('admin_product_column');
-//        $app->match('/admin/product/column/{id}', '\Plugin\AddProductColumns\Controller\ColumnController::index')
-//            ->assert('id', '^\d+$')
-//            ->bind('admin_product_column_edit');
-//        $app->match('/admin/product/column/{id}/up', '\Plugin\AddProductColumns\Controller\ColumnController::up')
-//            ->assert('id', '^\d+$')
-//            ->bind('admin_product_column_up');
-//        $app->match('/admin/product/column/{id}/down', '\Plugin\AddProductColumns\Controller\ColumnController::down')
-//            ->assert('id', '^\d+$')
-//            ->bind('admin_product_column_down');
-//        $app->match('/admin/product/column/move', '\Plugin\AddProductColumns\Controller\ColumnController::move')
-//            ->bind('admin_product_column_move');
-//        $app->match(
-//            '/admin/product/column/{id}/delete',
-//            '\Plugin\AddProductColumns\Controller\ColumnController::delete'
-//        )
-//            ->bind('admin_product_column_delete');
-//
-//        $app->post('/admin/product/column/image', '\Plugin\AddProductColumns\Controller\ProductController::addImage')
-//            ->bind('admin_product_column_image_add');
+        $app->match('/admin/ad_manage', '\Plugin\AdManage\Controller\AdController::index')
+            ->bind('admin_ad');
+        $app->match('/admin/ad_manage/{id}', '\Plugin\AdManage\Controller\AdController::index')
+            ->assert('id', '^\d+$')
+            ->bind('admin_ad_edit');
+        $app->match('/admin/ad_manage/{id}/delete', '\Plugin\AdManage\Controller\AdController::delete')
+            ->assert('id', '^\d+$')
+            ->bind('admin_ad_delete');
+        $app->match('/admin/ad_manage/total', '\Plugin\AdManage\Controller\AdController::total')
+            ->bind('admin_ad_total');
     }
 
     public function initForm(BaseApplication $app)
     {
-//        $app['form.type.extensions'] = $app->share(
-//            $app->extend(
-//                'form.type.extensions',
-//                function ($extensions) use ($app) {
-//                    $extensions[] = new \Plugin\AddProductColumns\Form\Extension\ProductTypeExtension($app);
-//
-//                    return $extensions;
-//                }
-//            )
-//        );
-//
-//        $app['form.types'] = $app->share(
-//            $app->extend(
-//                'form.types',
-//                function ($types) use ($app) {
-//                    $types[] = new \Plugin\AddProductColumns\Form\Type\Admin\ColumnType($app);
-//                    $types[] = new \Plugin\AddProductColumns\Form\Type\Master\ColumnTypeType();
-//
-//                    return $types;
-//                }
-//            )
-//        );
+        $app['form.types'] = $app->share(
+            $app->extend(
+                'form.types',
+                function ($types) use ($app) {
+                    $types[] = new \Plugin\AdManage\Form\Type\Admin\AdType($app);
+                    $types[] = new \Plugin\AdManage\Form\Type\Master\MediaType($app);
+
+                    return $types;
+                }
+            )
+        );
     }
 
     public function initConfig(BaseApplication $app)
@@ -115,31 +92,36 @@ class AdManageServiceProvider implements ServiceProviderInterface
                 'config',
                 function ($configAll) {
 
-                    $ymlPath = __DIR__ . '/../config';
+//                    $ymlPath = __DIR__ . '/../config';
 
-//                    $configAll['nav'] = array_map(
-//                        function ($nav) {
-//                            if ($nav['id'] == 'product') {
-//                                $nav['child'][] = array(
-//                                    'id' => 'product_column',
-//                                    'name' => '商品情報管理',
-//                                    'url' => 'admin_product_column',
-//                                );
-//                            }
+                    $configAll['nav'] = array_map(
+                        function ($nav) {
+                            if ($nav['id'] == 'content') {
+                                $nav['child'][] = array(
+                                    'id' => 'ad_master',
+                                    'name' => '広告媒体管理',
+                                    'url' => 'admin_ad',
+                                );
+                                $nav['child'][] = array(
+                                    'id' => 'ad_total',
+                                    'name' => '広告効果測定',
+                                    'url' => 'admin_ad_total',
+                                );
+                            }
+
+                            return $nav;
+                        },
+                        $configAll['nav']
+                    );
+
+//                    $config = array();
+//                    $configYml = $ymlPath . '/config.yml';
 //
-//                            return $nav;
-//                        },
-//                        $configAll['nav']
-//                    );
+//                    if (file_exists($configYml)) {
+//                        $config = Yaml::parse($configYml);
+//                    }
+//                    $configAll = array_replace_recursive($configAll, $config);
 //
-                    $config = array();
-                    $configYml = $ymlPath . '/config.yml';
-
-                    if (file_exists($configYml)) {
-                        $config = Yaml::parse($configYml);
-                    }
-                    $configAll = array_replace_recursive($configAll, $config);
-
                     return $configAll;
                 }
             )
@@ -148,37 +130,11 @@ class AdManageServiceProvider implements ServiceProviderInterface
 
     public function initDoctrine(BaseApplication $app)
     {
-//        $app['eccube.plugin.add_product_columns.repository.column'] = $app->share(
-//            function () use ($app) {
-//                return $app['orm.em']->getRepository('Plugin\AddProductColumns\Entity\Column');
-//            }
-//        );
-//
-//        $app['eccube.plugin.add_product_columns.repository.column_type'] = $app->share(
-//            function () use ($app) {
-//                return $app['orm.em']->getRepository('Plugin\AddProductColumns\Entity\Master\ColumnType');
-//            }
-//        );
-//
-//        $app['eccube.plugin.add_product_columns.repository.product_column'] = $app->share(
-//            function () use ($app) {
-//                return $app['orm.em']->getRepository('Plugin\AddProductColumns\Entity\ProductColumn');
-//            }
-//        );
-    }
-
-    public function initRendering(BaseApplication $app)
-    {
-//        $app['twig'] = $app->share(
-//            $app->extend(
-//                'twig',
-//                function (\Twig_Environment $twig, \Silex\Application $app) {
-//                    $twig->addExtension(new \Plugin\AddProductColumns\Twig\Extension\AddProductColumnsExtension($app));
-//
-//                    return $twig;
-//                }
-//            )
-//        );
+        $app['eccube.plugin.ad_manage.repository.ad'] = $app->share(
+            function () use ($app) {
+                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Ad');
+            }
+        );
     }
 
     public function boot(BaseApplication $app)

@@ -1,0 +1,41 @@
+Plugin\AdManage\Entity\Ad:
+  type: entity
+  table: plg_dtb_ad
+  repositoryClass: Plugin\AdManage\Repository\AdRepository
+  id:
+    id:
+      type: integer
+      nullable: false
+      unsigned: false
+      id: true
+      column: ad_id
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: text
+      nullable: false
+      default: ''
+    code:
+      type: text
+      nullable: false
+    create_date:
+      type: datetime
+      nullable: false
+    update_date:
+      type: datetime
+      nullable: false
+    del_flg:
+      type: smallint
+      nullable: false
+      unsigned: false
+      options:
+        default: '0'
+  manyToOne:
+    Media:
+      targetEntity: Plugin\AdManage\Entity\Master\Media
+      inversedBy: Ads
+      joinColumn:
+        name: media_id
+        referencedColumnName: id
+  lifecycleCallbacks: {}

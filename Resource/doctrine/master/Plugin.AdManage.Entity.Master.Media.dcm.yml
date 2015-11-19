@@ -1,0 +1,19 @@
+Plugin\AdManage\Entity\Master\Media:
+  type: entity
+  table: plg_mtb_media
+  repositoryClass: Plugin\AdManage\Repository\Master\MediaRepository
+  id:
+    id:
+      type: smallint
+      nullable: false
+      unsigned: false
+      id: true
+  fields:
+    name:
+      type: text
+      nullable: true
+    rank:
+      type: smallint
+      nullable: false
+      unsigned: false
+  lifecycleCallbacks: {  }
