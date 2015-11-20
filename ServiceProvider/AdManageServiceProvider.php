@@ -48,7 +48,10 @@ class AdManageServiceProvider implements ServiceProviderInterface
     public function initPluginEventDispatcher(BaseApplication $app)
     {
         $app->after(function (Request $request, Response $response, \Silex\Application $app) {
-            $app['eccube.plugin.ad_manage.service.ad']->track($response);
+            $Plugin = $app['eccube.repository.plugin']->findOneBy(array('code' => 'AdManage', 'enable' => '1'));
+            if(!empty($Plugin)) {
+                $app['eccube.plugin.ad_manage.service.ad']->track($response);
+            }
         });
     }
 
@@ -141,7 +144,13 @@ class AdManageServiceProvider implements ServiceProviderInterface
     public function initService(BaseApplication $app)
     {
         $app['eccube.plugin.ad_manage.service.ad'] = $app->share(function () use ($app) {
-            return new \Plugin\AdManage\Service\AdService($app);
+            $Plugin = $app['eccube.repository.plugin']->findOneBy(array('code' => 'AdManage', 'enable' => '1'));
+            if(!empty($Plugin)){
+                return new \Plugin\AdManage\Service\AdService($app);
+            }
+            else{
+                return null;
+            }
         });
     }
 
