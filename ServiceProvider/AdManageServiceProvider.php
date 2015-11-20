@@ -5,6 +5,8 @@ namespace Plugin\AdManage\ServiceProvider;
 use Eccube\Application;
 use Silex\Application as BaseApplication;
 use Silex\ServiceProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 
 class AdManageServiceProvider implements ServiceProviderInterface
@@ -20,6 +22,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
             $this->initDoctrine($app);
             $this->initTranslator($app);
             $this->initPluginEventDispatcher($app);
+            $this->initService($app);
         }
     }
 
@@ -44,16 +47,9 @@ class AdManageServiceProvider implements ServiceProviderInterface
 
     public function initPluginEventDispatcher(BaseApplication $app)
     {
-//        $app->on(
-//            \Symfony\Component\HttpKernel\KernelEvents::RESPONSE,
-//            function (\Symfony\Component\HttpKernel\Event\FilterResponseEvent $event) use ($app) {
-//                $route = $event->getRequest()->attributes->get('_route');
-//                $app['eccube.event.dispatcher']->dispatch(
-//                    'eccube.plugin.add_product_columns.event.render.' . $route . '.before',
-//                    $event
-//                );
-//            }
-//        );
+        $app->after(function (Request $request, Response $response, \Silex\Application $app) {
+            $app['eccube.plugin.ad_manage.service.ad']->track($response);
+        });
     }
 
     public function initRoute(BaseApplication $app)
@@ -92,7 +88,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
                 'config',
                 function ($configAll) {
 
-//                    $ymlPath = __DIR__ . '/../config';
+                    $ymlPath = __DIR__ . '/../config';
 
                     $configAll['nav'] = array_map(
                         function ($nav) {
@@ -114,14 +110,14 @@ class AdManageServiceProvider implements ServiceProviderInterface
                         $configAll['nav']
                     );
 
-//                    $config = array();
-//                    $configYml = $ymlPath . '/config.yml';
-//
-//                    if (file_exists($configYml)) {
-//                        $config = Yaml::parse($configYml);
-//                    }
-//                    $configAll = array_replace_recursive($configAll, $config);
-//
+                    $config = array();
+                    $configYml = $ymlPath . '/config.yml';
+
+                    if (file_exists($configYml)) {
+                        $config = Yaml::parse($configYml);
+                    }
+                    $configAll = array_replace_recursive($configAll, $config);
+
                     return $configAll;
                 }
             )
@@ -135,6 +131,18 @@ class AdManageServiceProvider implements ServiceProviderInterface
                 return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Ad');
             }
         );
+        $app['eccube.plugin.ad_manage.repository.access'] = $app->share(
+            function () use ($app) {
+                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Access');
+            }
+        );
+    }
+
+    public function initService(BaseApplication $app)
+    {
+        $app['eccube.plugin.ad_manage.service.ad'] = $app->share(function () use ($app) {
+            return new \Plugin\AdManage\Service\AdService($app);
+        });
     }
 
     public function boot(BaseApplication $app)

@@ -26,13 +26,29 @@ class Version20151117173400 extends AbstractMigration
         $media->addColumn('name', 'text', array('notnull' => false));
         $media->addColumn('rank', 'smallint', array('notnull' => true));
         $media->setPrimaryKey(array('id'));
-
+        
+        $access = $schema->createTable('plg_dtb_access');
+        $access->addColumn('access_id', 'integer', array('notnull' => true, 'autoincrement' => true));
+        $access->addColumn('unique_id', 'text', array('notnull' => true, 'default' => ''));
+        $access->addColumn('customer_id', 'integer', array('notnull' => false));
+        $access->addColumn('referrer', 'text', array('notnull' => false));
+        $access->addColumn('ad_code', 'string', array('notnull' => false));
+        $access->addColumn('ip_address', 'text', array('notnull' => false));
+        $access->addColumn('user_agent', 'text', array('notnull' => false));
+        $access->addColumn('page', 'text', array('notnull' => false));
+        $access->addColumn('create_date', 'datetime', array('notnull' => true));
+        $access->setPrimaryKey(array('access_id'));
+        
+        $customer = $schema->getTable('dtb_customer');
+        
         $ad->addForeignKeyConstraint($media, array('media_id'), array('id'));
+        $access->addForeignKeyConstraint($customer, array('customer_id'), array('customer_id'));
     }
 
     public function down(Schema $schema)
     {
         $schema->dropTable('plg_dtb_ad');
+        $schema->dropTable('plg_dtb_access');
         $schema->dropTable('plg_mtb_media');
     }
 }

@@ -1,0 +1,44 @@
+Plugin\AdManage\Entity\Access:
+  type: entity
+  table: plg_dtb_access
+  repositoryClass: Plugin\AdManage\Repository\AccessRepository
+  id:
+    id:
+      type: integer
+      nullable: false
+      unsigned: false
+      id: true
+      column: access_id
+      generator:
+        strategy: AUTO
+  fields:
+    unique_id:
+      type: text
+      nullable: false
+      default: ''
+    referrer:
+      type: text
+      nullable: true
+    ad_code:
+      type: text
+      nullable: true
+    ip_address:
+      type: text
+      nullable: true
+    user_agent:
+      type: text
+      nullable: true
+    page:
+      type: text
+      nullable: true
+    create_date:
+      type: datetime
+      nullable: false
+  manyToOne:
+    Customer:
+      targetEntity: Eccube\Entity\Customer
+      inversedBy: Access
+      joinColumn:
+        name: customer_id
+        referencedColumnName: customer_id
+  lifecycleCallbacks: {}
