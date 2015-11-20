@@ -33,12 +33,12 @@ class AdController
 
                 if ($result) {
 
-                    $app->addSuccess('admin.admanage.ad.save.success', 'admin');
+                    $app->addSuccess('admin.ad_manage.ad.save.success', 'admin');
 
                     return $app->redirect($app->url('admin_ad'));
                 } else {
 
-                    $app->addError('admin.admanage.ad.save.failure', 'admin');
+                    $app->addError('admin.ad_manage.ad.save.failure', 'admin');
                 }
             }
         }
@@ -69,9 +69,9 @@ class AdController
             $Ad->setDelFlg(1);
             $app['orm.em']->persist($Ad);
             $app['orm.em']->flush();
-            $app->addSuccess('admin.admanage.ad.delete.success', 'admin');
+            $app->addSuccess('admin.ad_manage.ad.delete.success', 'admin');
         } else {
-            $app->addError('admin.admanage.ad.delete.failure', 'admin');
+            $app->addError('admin.ad_manage.ad.delete.failure', 'admin');
         }
 
         return $app->redirect($app->url('admin_ad'));
