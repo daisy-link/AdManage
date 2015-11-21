@@ -36,6 +36,7 @@ class Version20151117173400 extends AbstractMigration
         $access->addColumn('ip_address', 'text', array('notnull' => false));
         $access->addColumn('user_agent', 'text', array('notnull' => false));
         $access->addColumn('page', 'text', array('notnull' => false));
+        $access->addColumn('history', 'integer', array('notnull' => true, 'default' => 0));
         $access->addColumn('create_date', 'datetime', array('notnull' => true));
         $access->setPrimaryKey(array('access_id'));
         

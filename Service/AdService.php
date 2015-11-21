@@ -257,10 +257,13 @@ class AdService
                 ->setIpAddress($ipAddress)
                 ->setUserAgent($userAgent)
                 ->setPage($this->request->getPathInfo())
-                ->setUniqueId($uniqueId);
+                ->setUniqueId($uniqueId)
+                ->setHistory(0);
 
             $this->app['orm.em']->persist($Access);
             $this->app['orm.em']->flush();
+            
+            $this->app['eccube.plugin.ad_manage.repository.access']->updateHistory($uniqueId);
         }
 
         $this->tracked = true;

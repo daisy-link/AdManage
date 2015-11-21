@@ -172,6 +172,25 @@ class Access extends AbstractEntity
     }
 
     /**
+     * @return integer
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    /**
+     * @param integer $history
+     * @return $this
+     */
+    public function setHistory($history)
+    {
+        $this->history = $history;
+
+        return $this;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getCreateDate()

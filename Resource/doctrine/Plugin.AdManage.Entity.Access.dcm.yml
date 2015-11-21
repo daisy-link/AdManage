@@ -31,6 +31,9 @@ Plugin\AdManage\Entity\Access:
     page:
       type: text
       nullable: true
+    history:
+      type: integer
+      nullable: false
     create_date:
       type: datetime
       nullable: false
