@@ -1,0 +1,25 @@
+Plugin\AdManage\Entity\Conversion:
+  type: entity
+  table: plg_dtb_conversion
+  repositoryClass: Plugin\AdManage\Repository\ConversionRepository
+  id:
+    id:
+      type: integer
+      nullable: false
+      unsigned: false
+      id: true
+      column: conversion_id
+      generator:
+        strategy: AUTO
+  fields:
+    unique_id:
+      type: text
+      nullable: false
+  oneToOne:
+    Order:
+      targetEntity: Eccube\Entity\Order
+      inversedBy: Conversion
+      joinColumn:
+        name: order_id
+        referencedColumnName: order_id
+  lifecycleCallbacks: {}

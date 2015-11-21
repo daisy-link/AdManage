@@ -39,16 +39,25 @@ class Version20151117173400 extends AbstractMigration
         $access->addColumn('create_date', 'datetime', array('notnull' => true));
         $access->setPrimaryKey(array('access_id'));
         
+        $conversion = $schema->createTable('plg_dtb_conversion');
+        $conversion->addColumn('conversion_id', 'integer', array('notnull' => true, 'autoincrement' => true));
+        $conversion->addColumn('order_id', 'integer', array('notnull' => true));
+        $conversion->addColumn('unique_id', 'text', array('notnull' => true));
+        $conversion->setPrimaryKey(array('conversion_id'));
+        
+        $order = $schema->getTable('dtb_order');
         $customer = $schema->getTable('dtb_customer');
         
         $ad->addForeignKeyConstraint($media, array('media_id'), array('id'));
         $access->addForeignKeyConstraint($customer, array('customer_id'), array('customer_id'));
+        $conversion->addForeignKeyConstraint($order, array('order_id'), array('order_id'));
     }
 
     public function down(Schema $schema)
     {
         $schema->dropTable('plg_dtb_ad');
         $schema->dropTable('plg_dtb_access');
+        $schema->dropTable('plg_dtb_conversion');
         $schema->dropTable('plg_mtb_media');
     }
 }

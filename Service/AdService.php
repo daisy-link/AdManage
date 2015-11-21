@@ -21,6 +21,7 @@ class AdService
     protected $response;
 
     protected $tracked = false;
+    protected $clear = false;
 
     const UNIQUE_ID_KEY = 'access_unique_id';
     const LAST_ACCESS_TIME_KEY = 'last_access_time';
@@ -33,11 +34,30 @@ class AdService
     }
 
     /**
+     * クッキー削除処理の予約をする。(実際の削除はtrack内)
+     */
+    public function clear()
+    {
+        $this->clear = true;
+    }
+
+    /**
+     * クッキー削除処理を行なう。
+     *
+     * @param Response $response
+     */
+    protected function _clear(Response $response)
+    {
+        $response->headers->setCookie(new Cookie(self::UNIQUE_ID_KEY, null));
+        $response->headers->setCookie(new Cookie(self::LAST_ACCESS_TIME_KEY, null));
+    }
+
+    /**
      * クッキーからユニークIDを取得する。
      *
      * @return string|null
      */
-    protected function getUniqueId()
+    public function getUniqueId()
     {
         return $this->request->cookies->get(self::UNIQUE_ID_KEY);
     }
@@ -102,7 +122,7 @@ class AdService
      *
      * @return integer|null
      */
-    protected function getLastAccessTime()
+    public function getLastAccessTime()
     {
         return $this->request->cookies->get(self::LAST_ACCESS_TIME_KEY);
     }
@@ -200,7 +220,9 @@ class AdService
     {
         $lastAccessTime = $this->getLastAccessTime();
 
-        if (
+        if ($this->clear) {
+            $this->_clear($response);
+        } elseif (
             !$this->isAdmin() &&                        // 管理画面アクセスでなく
             !$this->tracked() &&                        // 未追跡で
             !$lastAccessTime &&                         // 最後のアクセス秒がセットされておらず
