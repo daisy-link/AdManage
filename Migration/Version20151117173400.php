@@ -30,7 +30,6 @@ class Version20151117173400 extends AbstractMigration
         $access = $schema->createTable('plg_dtb_access');
         $access->addColumn('access_id', 'integer', array('notnull' => true, 'autoincrement' => true));
         $access->addColumn('unique_id', 'text', array('notnull' => true, 'default' => ''));
-        $access->addColumn('customer_id', 'integer', array('notnull' => false));
         $access->addColumn('referrer', 'text', array('notnull' => false));
         $access->addColumn('ad_code', 'string', array('notnull' => false));
         $access->addColumn('ip_address', 'text', array('notnull' => false));
@@ -47,10 +46,8 @@ class Version20151117173400 extends AbstractMigration
         $conversion->setPrimaryKey(array('conversion_id'));
         
         $order = $schema->getTable('dtb_order');
-        $customer = $schema->getTable('dtb_customer');
         
         $ad->addForeignKeyConstraint($media, array('media_id'), array('id'));
-        $access->addForeignKeyConstraint($customer, array('customer_id'), array('customer_id'));
         $conversion->addForeignKeyConstraint($order, array('order_id'), array('order_id'));
     }
 

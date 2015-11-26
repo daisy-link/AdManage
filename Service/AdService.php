@@ -239,10 +239,6 @@ class AdService
                 $uniqueId = $this->setUniqueId($response);
             }
 
-            $Customer = $this->app->user();
-            if (!($Customer instanceof \Eccube\Entity\Customer)) {
-                $Customer = null;
-            }
             
             $referrer = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER['HTTP_REFERER'] : null;
             $ipAddress = $_SERVER['REMOTE_ADDR'];
@@ -251,7 +247,6 @@ class AdService
             $Access = new Access();
             $Access
                 ->setId($uniqueId)
-                ->setCustomer($Customer)
                 ->setReferrer($referrer)
                 ->setAdCode($this->request->get($this->app['config']['ad_code_url_key']))
                 ->setIpAddress($ipAddress)

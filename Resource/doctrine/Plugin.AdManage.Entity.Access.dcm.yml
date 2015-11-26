@@ -37,11 +37,4 @@ Plugin\AdManage\Entity\Access:
     create_date:
       type: datetime
       nullable: false
-  manyToOne:
-    Customer:
-      targetEntity: Eccube\Entity\Customer
-      inversedBy: Access
-      joinColumn:
-        name: customer_id
-        referencedColumnName: customer_id
   lifecycleCallbacks: {}

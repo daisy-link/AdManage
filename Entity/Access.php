@@ -3,14 +3,12 @@
 namespace Plugin\AdManage\Entity;
 
 use Eccube\Entity\AbstractEntity;
-use Eccube\Entity\Customer;
 
 class Access extends AbstractEntity
 {
 
     protected $id;
     protected $unique_id;
-    protected $Customer;
     protected $referrer;
     protected $ad_code;
     protected $ip_address;
@@ -53,25 +51,6 @@ class Access extends AbstractEntity
     public function setUniqueId($uniqueId)
     {
         $this->unique_id = $uniqueId;
-
-        return $this;
-    }
-
-    /**
-     * @return Customer
-     */
-    public function getCustomer()
-    {
-        return $this->Customer;
-    }
-
-    /**
-     * @param Customer $Customer
-     * @return $this
-     */
-    public function setCustomer($Customer)
-    {
-        $this->Customer = $Customer;
 
         return $this;
     }
