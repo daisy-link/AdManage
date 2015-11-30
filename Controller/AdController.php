@@ -14,11 +14,11 @@ class AdController
             $EditAd = new \Plugin\AdManage\Entity\Ad();
         } else {
             $EditAd = $app['eccube.plugin.ad_manage.repository.ad']->find($id);
-            if(empty($EditAd)){
+            if (empty($EditAd)) {
                 throw new NotFoundHttpException();
             }
         }
-        
+
         $builder = $app['form.factory']
             ->createBuilder('admin_ad', $EditAd);
         $form = $builder->getForm();
@@ -75,5 +75,20 @@ class AdController
         }
 
         return $app->redirect($app->url('admin_ad'));
+    }
+
+    public function total(Application $app)
+    {
+        $medium = $app['eccube.plugin.ad_manage.repository.master.media']->getList();
+        
+        $mediaSummary = $app['eccube.plugin.ad_manage.repository.access']->getMediaSummary();
+        $adSummary = $app['eccube.plugin.ad_manage.repository.access']->getAdSummary();
+        return $app->renderView('AdManage/View/admin/Ad/total.twig',
+            array(
+                'mediaSummary' => $mediaSummary,
+                'adSummary' => $adSummary,
+                'medium' => $medium,
+            )
+        );
     }
 }

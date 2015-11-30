@@ -136,12 +136,19 @@ class AdManageServiceProvider implements ServiceProviderInterface
         );
         $app['eccube.plugin.ad_manage.repository.access'] = $app->share(
             function () use ($app) {
-                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Access');
+                $repository = $app['orm.em']->getRepository('Plugin\AdManage\Entity\Access');
+                $repository->setApp($app);
+                return $repository;
             }
         );
         $app['eccube.plugin.ad_manage.repository.conversion'] = $app->share(
             function () use ($app) {
                 return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Conversion');
+            }
+        );
+        $app['eccube.plugin.ad_manage.repository.master.media'] = $app->share(
+            function () use ($app) {
+                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Master\Media');
             }
         );
     }

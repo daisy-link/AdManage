@@ -1,0 +1,230 @@
+{% extends 'default_frame.twig' %}
+
+{% set menus = ['content', 'ad_total'] %}
+
+{% block title %}コンテンツ管理{% endblock %}
+{% block sub_title %}広告効果測定{% endblock %}
+
+{% block javascript %}
+    <style type="text/css">
+        .ad-summary .cb{
+            cursor:pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header with-arrow">
+                    全体サマリー
+                </div>
+                <div class="box-body">
+                    <div class="table_list">
+                        <div class="table-responsive">
+                            <table class="ad-summary table tableish-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>媒体グループ</th>
+                                    <th class="text-right">
+                                        訪問数
+                                    </th>
+                                    <th class="text-right">
+                                        UU
+                                        <svg class="cb cb-info-circle" title="ユニークユーザー数"><use xlink:href="#cb-info-circle" /></svg>
+                                    </th>
+                                    <th class="text-right">
+                                        再訪者率
+                                        <svg class="cb cb-info-circle" title="再訪問のユニークユーザー数 / ユニークユーザー数"><use xlink:href="#cb-info-circle" /></svg>
+                                    </th>
+                                    <th class="text-right">
+                                        CNV
+                                        <svg class="cb cb-info-circle" title="コンバージョン数"><use xlink:href="#cb-info-circle" /></svg>
+                                    </th>
+                                    <th class="text-right">
+                                        CNV率
+                                        <svg class="cb cb-info-circle" title="コンバージョン数 / ユニークユーザー数"><use xlink:href="#cb-info-circle" /></svg>
+                                    </th>
+                                    <th class="text-right">
+                                        購入総額
+                                        <svg class="cb cb-info-circle" title="コンバージョンの購入総額"><use xlink:href="#cb-info-circle" /></svg>
+                                        <br/>
+                                        (平均購入金額)
+                                        <svg class="cb cb-info-circle" title="購入総額 / コンバージョン数"><use xlink:href="#cb-info-circle" /></svg>
+                                    </th>
+                                    <th class="text-right">
+                                        貢献金額
+                                        <svg class="cb cb-info-circle" title="(購入総額 / コンバージョンに紐づく全てのアクセス数) * コンバージョンに紐づく広告媒体グループのアクセス数"><use xlink:href="#cb-info-circle" /></svg>
+                                        <br/>
+                                        (平均貢献金額)
+                                        <svg class="cb cb-info-circle" title="(購入総額 / コンバージョンに紐づく全てのアクセス数)"><use xlink:href="#cb-info-circle" /></svg>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for media in mediaSummary %}
+                                    <tr>
+                                        <td>
+                                            {{ media.media_name }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.access_count|number_format(0, '.', ',') }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.unique_user_count|number_format(0, '.', ',') }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.revisit_user_rate * 100 }}%
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.conversion_count|number_format(0, '.', ',') }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.conversion_rate * 100 }}%
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.payment_total|number_format(0, '.', ',') }}円<br/>
+                                            ({{ media.payment_average|number_format(0, '.', ',') }}円)
+                                        </td>
+                                        <td class="text-right">
+                                            {{ media.payment_contribution_total|number_format(0, '.', ',') }}円<br/>
+                                            ({{ media.payment_contribution_average|number_format(0, '.', ',') }}円)
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% for mediaId, media in adSummary %}
+                <div class="box">
+                    <div class="box-header with-arrow">
+                        {{ medium[mediaId] }}
+                    </div>
+                    <div class="box-body">
+                        <div class="table_list">
+                            <div class="table-responsive">
+                                <table class="ad-summary table tableish-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th rowspan="2">
+                                            媒体名
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            訪問数
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            UU
+                                            <svg class="cb cb-info-circle" title="ユニークユーザー数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            再訪者率
+                                            <svg class="cb cb-info-circle" title="再訪問のユニークユーザー数 / ユニークユーザー数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            CNV
+                                            <svg class="cb cb-info-circle" title="コンバージョン数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            CNV率
+                                            <svg class="cb cb-info-circle" title="コンバージョン数 / ユニークユーザー数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            購入金額
+                                            <svg class="cb cb-info-circle" title="コンバージョンの購入総額"><use xlink:href="#cb-info-circle" /></svg>
+                                            <br/>
+                                            (平均購入金額)
+                                            <svg class="cb cb-info-circle" title="購入総額 / コンバージョン数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th rowspan="2" class="text-right">
+                                            貢献金額
+                                            <svg class="cb cb-info-circle" title="(購入総額 / コンバージョンに紐づく全てのアクセス数) * コンバージョンに紐づく広告媒体グループのアクセス数"><use xlink:href="#cb-info-circle" /></svg>
+                                            <br/>
+                                            (平均貢献金額)
+                                            <svg class="cb cb-info-circle" title="(購入総額 / コンバージョンに紐づく全てのアクセス数)"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th class="text-center">
+                                            直接
+                                            <svg class="cb cb-info-circle" title="直接コンバージョンに至ったアクセス数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th colspan="4" class="text-center">
+                                            間接
+                                            <svg class="cb cb-info-circle" title="アクセス後、他のアクセスを経由してコンバージョンに至ったアクセス数"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                        <th rowspan="2" class="text-center">
+                                            直接/間接
+                                            <svg class="cb cb-info-circle" title="コンバージョンの直間比率"><use xlink:href="#cb-info-circle" /></svg>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-right">1</th>
+                                        <th class="text-right">2</th>
+                                        <th class="text-right">3</th>
+                                        <th class="text-right">4</th>
+                                        <th class="text-right">5～</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for ad in media %}
+                                        <tr>
+                                            <td>
+                                                {{ ad.name }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.access_count|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.unique_user_count|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.revisit_user_rate * 100 }}%
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_count|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_rate * 100 }}%
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.payment_total|number_format(0, '.', ',') }}円<br/>
+                                                ({{ ad.payment_average|number_format(0, '.', ',') }}円)
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.payment_contribution_total|number_format(0, '.', ',') }}円<br/>
+                                                ({{ ad.payment_contribution_average|number_format(0, '.', ',') }}円)
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_count_1|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_count_2|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_count_3|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_count_4|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ ad.conversion_count_5_or_more|number_format(0, '.', ',') }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ ad.direct_conversion_rate * 100 }}%
+                                                /
+                                                {{ ad.indirect_conversion_rate * 100 }}%
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
