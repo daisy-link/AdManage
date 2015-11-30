@@ -29,7 +29,7 @@ class Version20151117173400 extends AbstractMigration
         
         $access = $schema->createTable('plg_dtb_access');
         $access->addColumn('access_id', 'integer', array('notnull' => true, 'autoincrement' => true));
-        $access->addColumn('unique_id', 'text', array('notnull' => true, 'default' => ''));
+        $access->addColumn('unique_id', 'string', array('notnull' => true, 'default' => ''));
         $access->addColumn('referrer', 'text', array('notnull' => false));
         $access->addColumn('ad_code', 'string', array('notnull' => false));
         $access->addColumn('ip_address', 'text', array('notnull' => false));
@@ -38,12 +38,14 @@ class Version20151117173400 extends AbstractMigration
         $access->addColumn('history', 'integer', array('notnull' => true, 'default' => 0));
         $access->addColumn('create_date', 'datetime', array('notnull' => true));
         $access->setPrimaryKey(array('access_id'));
+        $access->addIndex(array('unique_id'));
         
         $conversion = $schema->createTable('plg_dtb_conversion');
         $conversion->addColumn('conversion_id', 'integer', array('notnull' => true, 'autoincrement' => true));
         $conversion->addColumn('order_id', 'integer', array('notnull' => true));
-        $conversion->addColumn('unique_id', 'text', array('notnull' => true));
+        $conversion->addColumn('unique_id', 'string', array('notnull' => true));
         $conversion->setPrimaryKey(array('conversion_id'));
+        $conversion->addIndex(array('unique_id'));
         
         $order = $schema->getTable('dtb_order');
         
