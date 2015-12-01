@@ -99,7 +99,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
                             if ($nav['id'] == 'content') {
                                 $nav['child'][] = array(
                                     'id' => 'ad_master',
-                                    'name' => '広告媒体管理',
+                                    'name' => '媒体管理',
                                     'url' => 'admin_ad',
                                 );
                                 $nav['child'][] = array(
