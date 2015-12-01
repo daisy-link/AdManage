@@ -43,10 +43,14 @@ class AdController
             }
         }
 
-        $Ads = $app['eccube.plugin.ad_manage.repository.ad']->findBy(
-            array(),
-            array('id' => 'DESC')
+        $Ads = $app['eccube.plugin.ad_manage.repository.ad']->findNestedBy(array(),
+            array(
+                'Media' => 'ASC',
+                'id' => 'ASC',
+            )
         );
+
+        $medium = $app['eccube.plugin.ad_manage.repository.master.media']->getList();
 
         return $app->renderView(
             'AdManage/View/admin/Ad/index.twig',
@@ -54,6 +58,7 @@ class AdController
                 'form' => $form->createView(),
                 'Ads' => $Ads,
                 'EditAd' => $EditAd,
+                'medium' => $medium,
             )
         );
     }

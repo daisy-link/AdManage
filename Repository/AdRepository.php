@@ -51,7 +51,7 @@ class AdRepository extends EntityRepository
         $qb = $this->createQueryBuilder('ad');
         $qb->where('ad.code = :code')->setParameter('code', $Ad->getCode());
 
-        if(is_numeric($Ad->getId())){
+        if (is_numeric($Ad->getId())) {
             $qb->andWhere('ad.id != :id')->setParameter('id', $Ad->getId());
         }
 
@@ -59,5 +59,28 @@ class AdRepository extends EntityRepository
         $softDeleteFilter->setExcludes($originalExcludes);
 
         return !empty($result);
+    }
+
+    /**
+     * findByの結果を媒体グループ別にネストして取得する。
+     *
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array The objects.
+     */
+    public function findNestedBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $Ads = $this->findBy($criteria, $orderBy, $limit, $offset);
+        $results = array();
+        
+        foreach ($Ads as $Ad) {
+            $mediaId = $Ad->getMedia()->getId();
+            $results[$mediaId] = isset($results[$mediaId]) ? $results[$mediaId] : array();
+            $results[$mediaId][] = $Ad;
+        }
+        
+        return $results;
     }
 }

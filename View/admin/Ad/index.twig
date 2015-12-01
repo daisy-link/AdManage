@@ -39,74 +39,82 @@
                         </div>
                     </div>
                 </div>
-                <div class="box">
-                    {% if Ads|length > 0 %}
-                        <div class="box-header">
-                            <h3 class="box-title with-arrow">広告媒体一覧</h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="table_list">
-                                <div class="table-responsive with-border">
-                                    <table id="ads" class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>媒体グループ</th>
-                                            <th>媒体名</th>
-                                            <th>媒体コード</th>
-                                            <th>&nbsp;</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for Ad in Ads %}
-                                                {% set editUrl = url('admin_ad_edit', {id: Ad.id}) %}
-                                                <tr class="{% if Ad.id == EditAd.id %}warning {% endif %}">
-                                                    <td>
-                                                        {{ Ad.Media }}
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ editUrl }}">{{ Ad.name }}</a>
-                                                    </td>
-                                                    <td>
-                                                        {{ Ad.code }}
-                                                    </td>
-                                                    <td>
-                                                        <div class="icon_edit">
-                                                            <div class="dropdown">
-                                                                <a class="dropdown-toggle" data-toggle="dropdown">
-                                                                    <svg class="cb cb-ellipsis-h">
-                                                                        <use xlink:href="#cb-ellipsis-h"/>
-                                                                    </svg>
-                                                                </a>
-                                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                                    {% if Ad.id == EditAd.id %}
+                {% if Ads|length > 0%}
+                    {% for mediaId, media in Ads %}
+                        <div class="box">
+                            <div class="box-header with-arrow">
+                                {{ medium[mediaId] }}
+                            </div>
+                            <div class="box-body">
+                                <div class="table_list">
+                                    <div class="table-responsive">
+                                        <table id="ads" class="ad-summary table tableish-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th class="alignR">媒体ID</th>
+                                                <th>媒体グループ</th>
+                                                <th>媒体コード</th>
+                                                <th>媒体名</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for Ad in media %}
+                                                    {% set editUrl = url('admin_ad_edit', {id: Ad.id}) %}
+                                                    <tr class="{% if Ad.id == EditAd.id %}warning {% endif %}">
+                                                        <td class="alignR">
+                                                            {{ Ad.id }}
+                                                        </td>
+                                                        <td>
+                                                            {{ Ad.Media }}
+                                                        </td>
+                                                        <td>
+                                                            {{ Ad.code }}
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ editUrl }}">{{ Ad.name }}</a>
+                                                        </td>
+                                                        <td>
+                                                            <div class="icon_edit">
+                                                                <div class="dropdown">
+                                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                                        <svg class="cb cb-ellipsis-h">
+                                                                            <use xlink:href="#cb-ellipsis-h"/>
+                                                                        </svg>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                                        {% if Ad.id == EditAd.id %}
+                                                                            <li>
+                                                                                <a>編集中</a>
+                                                                            </li>
+                                                                        {% else %}
+                                                                            <li>
+                                                                                <a href="{{ editUrl }}">編集</a>
+                                                                            </li>
+                                                                        {% endif %}
                                                                         <li>
-                                                                            <a>編集中</a>
+                                                                            <a href="{{ url('admin_ad_delete', {id: Ad.id}) }}">削除</a>
                                                                         </li>
-                                                                    {% else %}
-                                                                        <li>
-                                                                            <a href="{{ editUrl }}">編集</a>
-                                                                        </li>
-                                                                    {% endif %}
-                                                                    <li>
-                                                                        <a href="{{ url('admin_ad_delete', {id: Ad.id}) }}">削除</a>
-                                                                    </li>
-                                                                </ul>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-                        <div class="box-header">
+                    {% endfor %}
+                {% else %}
+                    <div class="box">
+                        <div class="box-header with-arrow">
                             <h3 class="box-title with-arrow">データがありませんでした。</h3>
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="col-md-3">
                 <div class="box form-horizontal">
