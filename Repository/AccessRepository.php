@@ -161,6 +161,7 @@ FROM plg_mtb_media m
                 FROM plg_dtb_access ac
                     LEFT JOIN plg_dtb_ad ad
                         ON ac.ad_code = ad.code
+                WHERE del_flg = 0
             ) ac
                 LEFT JOIN plg_dtb_conversion c
                     ON ac.unique_id = c.unique_id
@@ -326,6 +327,7 @@ FROM plg_dtb_ad ad
         GROUP BY ac.ad_code
     ) ac
         ON ad.code = ac.ad_code
+WHERE del_flg = 0
 EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()
