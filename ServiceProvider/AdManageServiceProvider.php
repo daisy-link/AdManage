@@ -76,6 +76,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
                 'form.types',
                 function ($types) use ($app) {
                     $types[] = new \Plugin\AdManage\Form\Type\Admin\AdType($app);
+                    $types[] = new \Plugin\AdManage\Form\Type\Admin\AdTotalType();
                     $types[] = new \Plugin\AdManage\Form\Type\Master\MediaType($app);
 
                     return $types;

@@ -48,11 +48,37 @@ class AccessRepository extends EntityRepository
     /**
      * 媒体グループごとのサマリーを取得する。
      *
+     * @param array $searchData
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getMediaSummary()
+    public function getMediaSummary($searchData)
     {
+        $where = '1 = 1';
+        $orderWhere = '1 = 1';
+        $eb = $this->getEntityManager()->getExpressionBuilder();
+        
+        if(!empty($searchData['total_date_from']) && $searchData['total_date_from']){
+            $where .= ' AND ac.create_date >= :totalDateFrom';
+            $totalDateFrom = $searchData['total_date_from']
+                ->format('Y-m-d H:i:s');
+        }
+        
+        if(!empty($searchData['total_date_to']) && $searchData['total_date_to']){
+            $where .= ' AND ac.create_date <= :totalDateTo';
+            $totalDateTo = $searchData['total_date_to']
+                ->modify('+1 days')
+                ->format('Y-m-d H:i:s');
+        }
+        
+        if(!empty($searchData['order_status']) && count($searchData['order_status'])){
+            $orderStatuses = array();
+            foreach($searchData['order_status'] as $orderStatus){
+                $orderStatuses[] = $orderStatus->getId();
+            }
+            $orderWhere .= sprintf(' AND %s', $eb->in('status', $orderStatuses));
+        }
+        
         $sql = <<<EOSQL
 SELECT
     *,
@@ -140,7 +166,8 @@ FROM plg_mtb_media m
                     ON ac.unique_id = c.unique_id
                 LEFT JOIN dtb_order o
                     ON c.order_id = o.order_id
-            WHERE ac.create_date BETWEEN '2015-01-01 00:00:00' AND '2016-01-01 00:00:00'
+                    AND $orderWhere
+            WHERE $where
             GROUP BY ac.media_id, ac.unique_id
         ) ac
         GROUP BY ac.media_id
@@ -150,6 +177,15 @@ EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()
             ->prepare($sql);
+
+        if(isset($totalDateFrom)){
+            $stmt->bindParam(':totalDateFrom', $totalDateFrom);
+        }
+        
+        if(isset($totalDateTo)){
+            $stmt->bindParam(':totalDateTo', $totalDateTo);
+        }
+        
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -157,11 +193,37 @@ EOSQL;
     /**
      * 媒体ごとのサマリーを取得する。
      *
+     * @param array $searchData
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getAdSummary()
+    public function getAdSummary($searchData)
     {
+        $where = '1 = 1';
+        $orderWhere = '1 = 1';
+        $eb = $this->getEntityManager()->getExpressionBuilder();
+
+        if(!empty($searchData['total_date_from']) && $searchData['total_date_from']){
+            $where .= ' AND ac.create_date >= :totalDateFrom';
+            $totalDateFrom = $searchData['total_date_from']
+                ->format('Y-m-d H:i:s');
+        }
+
+        if(!empty($searchData['total_date_to']) && $searchData['total_date_to']){
+            $where .= ' AND ac.create_date <= :totalDateTo';
+            $totalDateTo = $searchData['total_date_to']
+                ->modify('+1 days')
+                ->format('Y-m-d H:i:s');
+        }
+
+        if(!empty($searchData['order_status']) && count($searchData['order_status'])){
+            $orderStatuses = array();
+            foreach($searchData['order_status'] as $orderStatus){
+                $orderStatuses[] = $orderStatus->getId();
+            }
+            $orderWhere .= sprintf(' AND %s', $eb->in('status', $orderStatuses));
+        }
+        
         $sql = <<<EOSQL
 SELECT
     *,
@@ -257,7 +319,8 @@ FROM plg_dtb_ad ad
                     ON ac.unique_id = c.unique_id
                 LEFT JOIN dtb_order o
                     ON c.order_id = o.order_id
-            WHERE ac.create_date BETWEEN '2015-01-01 00:00:00' AND '2016-01-01 00:00:00'
+                    AND $orderWhere
+            WHERE $where
             GROUP BY ac.ad_code, ac.unique_id
         ) ac
         GROUP BY ac.ad_code
@@ -267,6 +330,15 @@ EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()
             ->prepare($sql);
+
+        if(isset($totalDateFrom)){
+            $stmt->bindParam(':totalDateFrom', $totalDateFrom);
+        }
+
+        if(isset($totalDateTo)){
+            $stmt->bindParam(':totalDateTo', $totalDateTo);
+        }
+        
         $stmt->execute();
         $ads = $stmt->fetchAll();
         $results = array();

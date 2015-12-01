@@ -77,17 +77,37 @@ class AdController
         return $app->redirect($app->url('admin_ad'));
     }
 
-    public function total(Application $app)
+    public function total(Application $app, Request $request)
     {
-        $medium = $app['eccube.plugin.ad_manage.repository.master.media']->getList();
-        
-        $mediaSummary = $app['eccube.plugin.ad_manage.repository.access']->getMediaSummary();
-        $adSummary = $app['eccube.plugin.ad_manage.repository.access']->getAdSummary();
+        $form = $app['form.factory']
+            ->createBuilder('admin_ad_total')
+            ->getForm();
+
+        $search = false;
+        $medium = array();
+        $mediaSummary = array();
+        $adSummary = array();
+
+        if ($request->getMethod() == 'POST') {
+
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                
+                $search = true;
+                $data = $form->getData();
+                $medium = $app['eccube.plugin.ad_manage.repository.master.media']->getList();
+                $mediaSummary = $app['eccube.plugin.ad_manage.repository.access']->getMediaSummary($data);
+                $adSummary = $app['eccube.plugin.ad_manage.repository.access']->getAdSummary($data);
+            }
+        }
+
         return $app->renderView('AdManage/View/admin/Ad/total.twig',
             array(
                 'mediaSummary' => $mediaSummary,
                 'adSummary' => $adSummary,
                 'medium' => $medium,
+                'form' => $form->createView(),
+                'search' => $search,
             )
         );
     }
