@@ -97,7 +97,7 @@ FROM plg_mtb_media m
                 ac.media_id,
                 ac.unique_id,
                 COUNT(ac.access_id) AS user_access_count,
-                MAX(conversion_ac.user_conversion_access_count) AS user_conversion_access_count,
+                MAX(user_conversion_access_count) AS user_conversion_access_count,
                 COUNT(DISTINCT o.order_id) AS conversion_count,
                 COUNT(o.order_id IS NOT NULL OR NULL) AS user_conversion_count_all,
                 MAX(o.payment_total) AS user_payment_total,
@@ -115,7 +115,23 @@ FROM plg_mtb_media m
                         FROM plg_dtb_access old_ac
                         WHERE ac.unique_id = old_ac.unique_id
                         AND ac.access_id > old_ac.access_id
-                    ) THEN 1 ELSE 0 END AS is_revisit
+                    ) THEN 1 ELSE 0 END AS is_revisit,
+                    COALESCE((
+                        SELECT COUNT(1)
+                        FROM plg_dtb_access conversion_ac
+                            INNER JOIN plg_dtb_conversion c
+                                USING(unique_id)
+                            INNER JOIN dtb_order o
+                                USING(order_id)
+                        WHERE ac.unique_id = conversion_ac.unique_id
+                        AND (
+                            ac.ad_code = conversion_ac.ad_code
+                            OR (
+                                ac.ad_code IS NULL
+                                AND conversion_ac.ad_code IS NULL
+                            )
+                        )
+                    ), 0) AS user_conversion_access_count
                 FROM plg_dtb_access ac
                     LEFT JOIN plg_dtb_ad ad
                         ON ac.ad_code = ad.code
@@ -124,26 +140,6 @@ FROM plg_mtb_media m
                     ON ac.unique_id = c.unique_id
                 LEFT JOIN dtb_order o
                     ON c.order_id = o.order_id
-                LEFT JOIN (
-                    SELECT
-                        ac.ad_code,
-                        ac.unique_id,
-                        COUNT(ac.access_id) AS user_conversion_access_count
-                    FROM plg_dtb_access ac
-                        INNER JOIN plg_dtb_conversion
-                            USING(unique_id)
-                        INNER JOIN dtb_order
-                            USING(order_id)
-                    GROUP BY ac.ad_code, ac.unique_id
-                ) conversion_ac
-                    ON ac.unique_id = conversion_ac.unique_id
-                     AND (
-                        ac.ad_code = conversion_ac.ad_code
-                        OR (
-                            ac.ad_code IS NULL
-                            AND conversion_ac.ad_code IS NULL
-                        )
-                     )
             WHERE ac.create_date BETWEEN '2015-01-01 00:00:00' AND '2016-01-01 00:00:00'
             GROUP BY ac.media_id, ac.unique_id
         ) ac
@@ -219,7 +215,7 @@ FROM plg_dtb_ad ad
                 ac.ad_code,
                 ac.unique_id,
                 COUNT(ac.access_id) AS user_access_count,
-                MAX(conversion_ac.user_conversion_access_count) AS user_conversion_access_count,
+                MAX(user_conversion_access_count) AS user_conversion_access_count,
                 COUNT(DISTINCT o.order_id) AS conversion_count,
                 COUNT(o.order_id IS NOT NULL OR NULL) AS user_conversion_count_all,
                 COUNT(o.order_id IS NOT NULL AND ac.history = 1 OR NULL) AS user_conversion_count_1,
@@ -238,33 +234,29 @@ FROM plg_dtb_ad ad
                         FROM plg_dtb_access old_ac
                         WHERE ac.unique_id = old_ac.unique_id
                         AND ac.access_id > old_ac.access_id
-                    ) THEN 1 ELSE 0 END AS is_revisit
+                    ) THEN 1 ELSE 0 END AS is_revisit,
+                    COALESCE((
+                        SELECT COUNT(1)
+                        FROM plg_dtb_access conversion_ac
+                            INNER JOIN plg_dtb_conversion c
+                                USING(unique_id)
+                            INNER JOIN dtb_order o
+                                USING(order_id)
+                        WHERE ac.unique_id = conversion_ac.unique_id
+                        AND (
+                            ac.ad_code = conversion_ac.ad_code
+                            OR (
+                                ac.ad_code IS NULL
+                                AND conversion_ac.ad_code IS NULL
+                            )
+                        )
+                    ), 0) AS user_conversion_access_count
                 FROM plg_dtb_access ac
             ) ac
                 LEFT JOIN plg_dtb_conversion c
                     ON ac.unique_id = c.unique_id
                 LEFT JOIN dtb_order o
                     ON c.order_id = o.order_id
-                LEFT JOIN (
-                    SELECT
-                        ac.ad_code,
-                        ac.unique_id,
-                        COUNT(ac.access_id) AS user_conversion_access_count
-                    FROM plg_dtb_access ac
-                        INNER JOIN plg_dtb_conversion
-                            USING(unique_id)
-                        INNER JOIN dtb_order
-                            USING(order_id)
-                    GROUP BY ac.ad_code, ac.unique_id
-                ) conversion_ac
-                    ON ac.unique_id = conversion_ac.unique_id
-                     AND (
-                        ac.ad_code = conversion_ac.ad_code
-                        OR (
-                            ac.ad_code IS NULL
-                            AND conversion_ac.ad_code IS NULL
-                        )
-                     )
             WHERE ac.create_date BETWEEN '2015-01-01 00:00:00' AND '2016-01-01 00:00:00'
             GROUP BY ac.ad_code, ac.unique_id
         ) ac
