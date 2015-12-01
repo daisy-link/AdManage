@@ -65,6 +65,8 @@ class AdManageServiceProvider implements ServiceProviderInterface
         $app->match('/admin/ad_manage/{id}/delete', '\Plugin\AdManage\Controller\AdController::delete')
             ->assert('id', '^\d+$')
             ->bind('admin_ad_delete');
+        $app->match('/admin/ad_manage/media', '\Plugin\AdManage\Controller\MediaController::index')
+            ->bind('admin_media');
         $app->match('/admin/ad_manage/total', '\Plugin\AdManage\Controller\AdController::total')
             ->bind('admin_ad_total');
     }
@@ -77,6 +79,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
                 function ($types) use ($app) {
                     $types[] = new \Plugin\AdManage\Form\Type\Admin\AdType($app);
                     $types[] = new \Plugin\AdManage\Form\Type\Admin\AdTotalType();
+                    $types[] = new \Plugin\AdManage\Form\Type\Admin\MediaType();
                     $types[] = new \Plugin\AdManage\Form\Type\Master\MediaType($app);
 
                     return $types;
@@ -97,6 +100,11 @@ class AdManageServiceProvider implements ServiceProviderInterface
                     $configAll['nav'] = array_map(
                         function ($nav) {
                             if ($nav['id'] == 'content') {
+                                $nav['child'][] = array(
+                                    'id' => 'media_master',
+                                    'name' => '媒体グループ管理',
+                                    'url' => 'admin_media',
+                                );
                                 $nav['child'][] = array(
                                     'id' => 'ad_master',
                                     'name' => '媒体管理',
