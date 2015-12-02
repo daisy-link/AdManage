@@ -67,6 +67,9 @@ class AdManageServiceProvider implements ServiceProviderInterface
             ->bind('admin_ad_delete');
         $app->match('/admin/ad_manage/media', '\Plugin\AdManage\Controller\MediaController::index')
             ->bind('admin_media');
+        $app->match('/admin/ad_manage/media/{id}/delete', '\Plugin\AdManage\Controller\MediaController::delete')
+            ->assert('id', '^\d+$')
+            ->bind('admin_media_delete');
         $app->match('/admin/ad_manage/total', '\Plugin\AdManage\Controller\AdController::total')
             ->bind('admin_ad_total');
     }
@@ -140,7 +143,9 @@ class AdManageServiceProvider implements ServiceProviderInterface
     {
         $app['eccube.plugin.ad_manage.repository.ad'] = $app->share(
             function () use ($app) {
-                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Ad');
+                $repository = $app['orm.em']->getRepository('Plugin\AdManage\Entity\Ad');
+                $repository->setApp($app);
+                return $repository;
             }
         );
         $app['eccube.plugin.ad_manage.repository.access'] = $app->share(

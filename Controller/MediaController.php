@@ -43,4 +43,23 @@ class MediaController
             )
         );
     }
+
+    public function delete(Application $app, $id)
+    {
+        $Media = $app['eccube.plugin.ad_manage.repository.media']->find($id);
+        if (!$Media) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($Media instanceof \Plugin\AdManage\Entity\Media) {
+            $Media->setDelFlg(1);
+            $app['orm.em']->persist($Media);
+            $app['orm.em']->flush();
+            $app->addSuccess('admin.ad_manage.media.delete.success', 'admin');
+        } else {
+            $app->addError('admin.ad_manage.media.delete.failure', 'admin');
+        }
+
+        return $app->redirect($app->url('admin_media'));
+    }
 }

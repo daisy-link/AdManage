@@ -174,6 +174,7 @@ FROM plg_dtb_media m
         GROUP BY ac.media_id
     ) ac
         ON m.media_id = ac.media_id
+WHERE del_flg = 0
 EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()
@@ -343,11 +344,15 @@ EOSQL;
         
         $stmt->execute();
         $ads = $stmt->fetchAll();
+        $medium = $this->app['eccube.plugin.ad_manage.repository.media']->getList();
         $results = array();
         
         foreach($ads as $ad){
-            $results[$ad['media_id']] = isset($results[$ad['media_id']]) ? $results[$ad['media_id']] : array();
-            $results[$ad['media_id']][] = $ad;
+            $mediaId = $ad['media_id'];
+            if(isset($medium[$mediaId])) {
+                $results[$mediaId] = isset($results[$mediaId]) ? $results[$mediaId] : array();
+                $results[$mediaId][] = $ad;
+            }
         }
         
         return $results;

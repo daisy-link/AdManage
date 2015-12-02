@@ -17,7 +17,8 @@
                 <div class="box-body">
                     <div class="row">
                         <div class="form-inline col-md-12">
-                            <form role="form" class="form-horizontal" name="form1" id="form1" method="post" enctype="multipart/form-data">
+                            <form role="form" class="form-horizontal" name="form1" id="form1" method="post"
+                                  enctype="multipart/form-data">
                                 {{ form_widget(form._token) }}
                                 {{ form_widget(form.name, {attr: {placeholder: '媒体グループ名を入力'}}) }}
                                 {{ form_errors(form.name) }}
@@ -34,6 +35,23 @@
                                     <div class="item_pattern td">
                                         {{ Media.name }}
                                     </div>
+                                    <div class="icon_edit td">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                                <svg class="cb cb-ellipsis-h">
+                                                    <use xlink:href="#cb-ellipsis-h"/>
+                                                </svg>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a href="{{ url('admin_media_delete', {id: Media.id}) }}" {{ csrf_token_for_anchor() }}
+                                                       data-method="delete">
+                                                        削除
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -42,5 +60,5 @@
             </div>
         </div>
     </div>
-    
+
 {% endblock %}

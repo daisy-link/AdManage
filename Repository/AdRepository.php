@@ -6,6 +6,14 @@ use Doctrine\ORM\EntityRepository;
 
 class AdRepository extends EntityRepository
 {
+    /** @var Application $app */
+    protected $app;
+
+    public function setApp(\Eccube\Application $app)
+    {
+        $this->app = $app;
+    }
+    
     /**
      * 広告媒体を保存する。
      *
@@ -73,12 +81,15 @@ class AdRepository extends EntityRepository
     public function findNestedBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $Ads = $this->findBy($criteria, $orderBy, $limit, $offset);
+        $medium = $this->app['eccube.plugin.ad_manage.repository.media']->getList();
         $results = array();
         
         foreach ($Ads as $Ad) {
             $mediaId = $Ad->getMedia()->getId();
-            $results[$mediaId] = isset($results[$mediaId]) ? $results[$mediaId] : array();
-            $results[$mediaId][] = $Ad;
+            if(isset($medium[$mediaId])){
+                $results[$mediaId] = isset($results[$mediaId]) ? $results[$mediaId] : array();
+                $results[$mediaId][] = $Ad;
+            }
         }
         
         return $results;
