@@ -12,7 +12,7 @@
 
 {% block main %}
     <form role="form" name="form1" id="form1" method="post" action="" novalidate enctype="multipart/form-data">
-        <div class="row" id="aside_wrap">
+        <div class="row">
             <div class="col-md-9">
                 <div class="box form-horizontal">
                     <div class="box-header">
@@ -39,6 +39,37 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box form-horizontal">
+                    <div class="col_inner" id="aside_column">
+                        <div class="box no-header">
+                            <div class="box-body">
+                                <div class="row text-center">
+                                    <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                        <button class="btn btn-primary btn-block btn-lg"
+                                                onclick="document.form1.submit();">広告媒体を登録
+                                        </button>
+                                    </div>
+                                </div>
+                                {% if EditAd.id is not null %}
+                                    <div class="row text-center marT10">
+                                        <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                            <button type="button" class="btn btn-default btn-block btn-lg"
+                                                    onclick="location.href='{{ url('admin_ad') }}';">
+                                                編集を中止
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 {% if Ads|length > 0%}
                     {% for mediaId, media in Ads %}
                         <div class="box">
@@ -115,33 +146,6 @@
                         </div>
                     </div>
                 {% endif %}
-            </div>
-            <div class="col-md-3">
-                <div class="box form-horizontal">
-                    <div class="col_inner" id="aside_column">
-                        <div class="box no-header">
-                            <div class="box-body">
-                                <div class="row text-center">
-                                    <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
-                                        <button class="btn btn-primary btn-block btn-lg"
-                                                onclick="document.form1.submit();">広告媒体を登録
-                                        </button>
-                                    </div>
-                                </div>
-                                {% if EditAd.id is not null %}
-                                    <div class="row text-center marT10">
-                                        <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
-                                            <button type="button" class="btn btn-default btn-block btn-lg"
-                                                    onclick="location.href='{{ url('admin_ad') }}';">
-                                                編集を中止
-                                            </button>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </form>
