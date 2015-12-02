@@ -146,13 +146,13 @@
                                                     {{ media.unique_user_count|number_format(0, '.', ',') }}
                                                 </td>
                                                 <td class="text-right">
-                                                    {{ media.revisit_user_rate * 100 }}%
+                                                    {{ (media.revisit_user_rate * 100)|round(1) }}%
                                                 </td>
                                                 <td class="text-right">
                                                     {{ media.conversion_count|number_format(0, '.', ',') }}
                                                 </td>
                                                 <td class="text-right">
-                                                    {{ media.conversion_rate * 100 }}%
+                                                    {{ (media.conversion_rate * 100)|round(1) }}%
                                                 </td>
                                                 <td class="text-right">
                                                     {{ media.payment_total|number_format(0, '.', ',') }}円<br/>
@@ -257,13 +257,13 @@
                                                         {{ ad.unique_user_count|number_format(0, '.', ',') }}
                                                     </td>
                                                     <td class="text-right">
-                                                        {{ ad.revisit_user_rate * 100 }}%
+                                                        {{ (ad.revisit_user_rate * 100)|round(1) }}%
                                                     </td>
                                                     <td class="text-right">
                                                         {{ ad.conversion_count|number_format(0, '.', ',') }}
                                                     </td>
                                                     <td class="text-right">
-                                                        {{ ad.conversion_rate * 100 }}%
+                                                        {{ (ad.conversion_rate * 100)|round(1) }}%
                                                     </td>
                                                     <td class="text-right">
                                                         {{ ad.payment_total|number_format(0, '.', ',') }}円<br/>
@@ -289,9 +289,9 @@
                                                         {{ ad.conversion_count_5_or_more|number_format(0, '.', ',') }}
                                                     </td>
                                                     <td class="text-center">
-                                                        {{ ad.direct_conversion_rate * 100 }}%
+                                                        {{ (ad.direct_conversion_rate * 100)|round }}%
                                                         /
-                                                        {{ ad.indirect_conversion_rate * 100 }}%
+                                                        {{ (ad.indirect_conversion_rate * 100)|round }}%
                                                     </td>
                                                 </tr>
                                             {% endfor %}
