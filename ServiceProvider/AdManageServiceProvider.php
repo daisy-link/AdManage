@@ -132,6 +132,12 @@ class AdManageServiceProvider implements ServiceProviderInterface
                         $config = Yaml::parse($configYml);
                     }
                     $configAll = array_replace_recursive($configAll, $config);
+                    
+                    $ipYml = $ymlPath . '/exclude_ip.yml';
+                    $configAll['ad_manage_exclude_ip'] = file_exists($ipYml) ? array_filter((array)Yaml::parse($ipYml), 'strlen') : array();
+                    
+                    $uaYml = $ymlPath . '/exclude_ua.yml';
+                    $configAll['ad_manage_exclude_ua'] = file_exists($uaYml) ? array_filter((array)Yaml::parse($uaYml), 'strlen') : array();
 
                     return $configAll;
                 }

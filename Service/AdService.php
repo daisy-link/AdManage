@@ -152,26 +152,11 @@ class AdService
      */
     protected function isExcludeIpAddress($ipAddress = null)
     {
-        $result = false;
-
         if (!is_string($ipAddress)) {
             $ipAddress = $_SERVER['REMOTE_ADDR'];
         }
-
-        $long = ip2long($ipAddress);
-
-        if (is_numeric($long)) {
-            $excludeIpAddresses = array();
-            foreach ($excludeIpAddresses as $excludeIpAddress) {
-                $excludeLong = ip2long($excludeIpAddress);
-                if ($long == $excludeLong) {
-                    $result = true;
-                    break;
-                }
-            }
-        }
-
-        return $result;
+        
+        return in_array($ipAddress, $this->app['config']['ad_manage_exclude_ip']);
     }
 
     /**
@@ -185,9 +170,12 @@ class AdService
         if (!is_string($userAgent)) {
             $userAgent = $_SERVER['HTTP_USER_AGENT'];
         }
+        
+        $regex = sprintf('/%s/', implode('|', array_map(function($ua){
+            return preg_quote($ua, '/');
+        }, $this->app['config']['ad_manage_exclude_ua'])));
 
-        // Bot除外
-        return preg_match('/bot/i', $userAgent);
+        return (bool)(!empty($this->app['config']['ad_manage_exclude_ua']) && preg_match($regex, $userAgent));
     }
 
     /**
