@@ -82,7 +82,7 @@ class AccessRepository extends EntityRepository
         $sql = <<<EOSQL
 SELECT
     *,
-    CASE media_id
+    CASE ac.media_id
         WHEN -2 THEN '直接 (Direct)'
         WHEN -1 THEN '間接 (Referrer)'
         ELSE name
@@ -107,7 +107,7 @@ SELECT
         WHEN conversion_access_count > 0 THEN payment_total / conversion_access_count
         ELSE 0
     END AS payment_contribution_average
-FROM plg_mtb_media m
+FROM plg_dtb_media m
     RIGHT JOIN (
         SELECT
             ac.media_id,
@@ -173,7 +173,7 @@ FROM plg_mtb_media m
         ) ac
         GROUP BY ac.media_id
     ) ac
-        ON m.id = ac.media_id
+        ON m.media_id = ac.media_id
 EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()

@@ -12,7 +12,7 @@ class Version20151117173400 extends AbstractMigration
     {
         $ad = $schema->createTable('plg_dtb_ad');
         $ad->addColumn('ad_id', 'integer', array('notnull' => true, 'autoincrement' => true));
-        $ad->addColumn('media_id', 'smallint', array('notnull' => true));
+        $ad->addColumn('media_id', 'integer', array('notnull' => true));
         $ad->addColumn('name', 'text', array('notnull' => true, 'default' => ''));
         $ad->addColumn('code', 'string', array('notnull' => true));
         $ad->addColumn('create_date', 'datetime', array('notnull' => true));
@@ -21,11 +21,13 @@ class Version20151117173400 extends AbstractMigration
         $ad->setPrimaryKey(array('ad_id'));
         $ad->addUniqueIndex(array('code'));
         
-        $media = $schema->createTable('plg_mtb_media');
-        $media->addColumn('id', 'smallint', array('notnull' => true, 'autoincrement' => true));
+        $media = $schema->createTable('plg_dtb_media');
+        $media->addColumn('media_id', 'integer', array('notnull' => true, 'autoincrement' => true));
         $media->addColumn('name', 'text', array('notnull' => false));
-        $media->addColumn('rank', 'smallint', array('notnull' => true));
-        $media->setPrimaryKey(array('id'));
+        $media->addColumn('create_date', 'datetime', array('notnull' => true));
+        $media->addColumn('update_date', 'datetime', array('notnull' => true));
+        $media->addColumn('del_flg', 'smallint', array('notnull' => true, 'default' => 0));
+        $media->setPrimaryKey(array('media_id'));
         
         $access = $schema->createTable('plg_dtb_access');
         $access->addColumn('access_id', 'integer', array('notnull' => true, 'autoincrement' => true));
@@ -49,7 +51,7 @@ class Version20151117173400 extends AbstractMigration
         
         $order = $schema->getTable('dtb_order');
         
-        $ad->addForeignKeyConstraint($media, array('media_id'), array('id'));
+        $ad->addForeignKeyConstraint($media, array('media_id'), array('media_id'));
         $conversion->addForeignKeyConstraint($order, array('order_id'), array('order_id'));
     }
 
@@ -58,6 +60,6 @@ class Version20151117173400 extends AbstractMigration
         $schema->dropTable('plg_dtb_ad');
         $schema->dropTable('plg_dtb_access');
         $schema->dropTable('plg_dtb_conversion');
-        $schema->dropTable('plg_mtb_media');
+        $schema->dropTable('plg_dtb_media');
     }
 }

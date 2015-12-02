@@ -19,21 +19,21 @@ class MediaController
             if ($form->isValid()) {
 
                 $Media = $form->getData();
-                $result = $app['eccube.plugin.ad_manage.repository.master.media']->save($Media);
+                $Media->setDelFlg(0);
 
-                if ($result) {
-
+                try {
+                    $app['orm.em']->persist($Media);
+                    $app['orm.em']->flush($Media);
                     $app->addSuccess('admin.ad_manage.media.save.success', 'admin');
-
-                    return $app->redirect($app->url('admin_media'));
-                } else {
-
+                } catch (\Exception $e) {
                     $app->addError('admin.ad_manage.media.save.failure', 'admin');
                 }
+
+                return $app->redirect($app->url('admin_media'));
             }
         }
 
-        $Medium = $app['eccube.plugin.ad_manage.repository.master.media']->findBy(array(), array('rank' => 'ASC'));
+        $Medium = $app['eccube.plugin.ad_manage.repository.media']->findBy(array(), array('id' => 'ASC'));
 
         return $app->renderView(
             'AdManage/View/admin/Media/index.twig',

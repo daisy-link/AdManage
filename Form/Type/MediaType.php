@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugin\AdManage\Form\Type\Master;
+namespace Plugin\AdManage\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -23,11 +23,11 @@ class MediaType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'class' => 'Plugin\AdManage\Entity\Master\Media',
+                'class' => 'Plugin\AdManage\Entity\Media',
                 'query_builder' => function (EntityRepository $er) {
                     return $er
                         ->createQueryBuilder('m')
-                        ->orderBy('m.rank', 'ASC');
+                        ->orderBy('m.id', 'ASC');
                 },
                 'property' => 'name',
                 'label' => '媒体グループ',

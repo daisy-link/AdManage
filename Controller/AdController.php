@@ -50,7 +50,7 @@ class AdController
             )
         );
 
-        $medium = $app['eccube.plugin.ad_manage.repository.master.media']->getList();
+        $medium = $app['eccube.plugin.ad_manage.repository.media']->getList();
 
         return $app->renderView(
             'AdManage/View/admin/Ad/index.twig',
@@ -100,7 +100,7 @@ class AdController
                 
                 $search = true;
                 $data = $form->getData();
-                $medium = $app['eccube.plugin.ad_manage.repository.master.media']->getList();
+                $medium = $app['eccube.plugin.ad_manage.repository.media']->getList();
                 $mediaSummary = $app['eccube.plugin.ad_manage.repository.access']->getMediaSummary($data);
                 $adSummary = $app['eccube.plugin.ad_manage.repository.access']->getAdSummary($data);
             }

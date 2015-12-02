@@ -28,7 +28,7 @@ class MediaType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Plugin\AdManage\Entity\Master\Media',
+                'data_class' => 'Plugin\AdManage\Entity\Media',
             )
         );
     }

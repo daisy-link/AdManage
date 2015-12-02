@@ -80,7 +80,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
                     $types[] = new \Plugin\AdManage\Form\Type\Admin\AdType($app);
                     $types[] = new \Plugin\AdManage\Form\Type\Admin\AdTotalType();
                     $types[] = new \Plugin\AdManage\Form\Type\Admin\MediaType();
-                    $types[] = new \Plugin\AdManage\Form\Type\Master\MediaType($app);
+                    $types[] = new \Plugin\AdManage\Form\Type\MediaType($app);
 
                     return $types;
                 }
@@ -155,9 +155,9 @@ class AdManageServiceProvider implements ServiceProviderInterface
                 return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Conversion');
             }
         );
-        $app['eccube.plugin.ad_manage.repository.master.media'] = $app->share(
+        $app['eccube.plugin.ad_manage.repository.media'] = $app->share(
             function () use ($app) {
-                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Master\Media');
+                return $app['orm.em']->getRepository('Plugin\AdManage\Entity\Media');
             }
         );
     }

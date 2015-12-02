@@ -2,17 +2,21 @@
 
 namespace Plugin\AdManage\Entity;
 
-use Eccube\Entity\AbstractEntity;
-
-class Ad extends AbstractEntity
+class Media extends \Eccube\Entity\AbstractEntity
 {
     protected $id;
-    protected $Media;
     protected $name;
-    protected $code;
     protected $create_date;
     protected $update_date;
     protected $del_flg;
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
      * @return integer
@@ -48,44 +52,6 @@ class Ad extends AbstractEntity
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    /**
-     * @param string $code
-     * @return $this
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * @return \Plugin\AdManage\Entity\Media
-     */
-    public function getMedia()
-    {
-        return $this->Media;
-    }
-
-    /**
-     * @param \Plugin\AdManage\Entity\Media $Media
-     * @return $this
-     */
-    public function setMedia($Media)
-    {
-        $this->Media = $Media;
 
         return $this;
     }
