@@ -88,23 +88,23 @@ SELECT
         ELSE name
     END AS media_name,
     CASE
-        WHEN unique_user_count > 0 THEN conversion_count / CAST(unique_user_count AS NUMERIC)
+        WHEN unique_user_count > 0 THEN conversion_count / CAST(unique_user_count AS DECIMAL)
         ELSE 0
     END AS conversion_rate,
     CASE
-        WHEN conversion_count > 0 THEN payment_total / CAST(conversion_count AS NUMERIC)
+        WHEN conversion_count > 0 THEN payment_total / CAST(conversion_count AS DECIMAL)
         ELSE 0
     END AS payment_average,
     CASE
-        WHEN unique_user_count > 0 THEN revisit_user_count / CAST(unique_user_count AS NUMERIC)
+        WHEN unique_user_count > 0 THEN revisit_user_count / CAST(unique_user_count AS DECIMAL)
         ELSE 0
     END AS revisit_user_rate,
     CASE
-        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS NUMERIC)) * conversion_count
+        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS DECIMAL)) * conversion_count
         ELSE 0
     END AS payment_contribution_total,
     CASE
-        WHEN conversion_access_count > 0 THEN payment_total / CAST(conversion_access_count AS NUMERIC)
+        WHEN conversion_access_count > 0 THEN payment_total / CAST(conversion_access_count AS DECIMAL)
         ELSE 0
     END AS payment_contribution_average
 FROM plg_dtb_media m
@@ -230,31 +230,31 @@ EOSQL;
 SELECT
     *,
     CASE
-        WHEN unique_user_count > 0 THEN conversion_count / CAST(unique_user_count AS NUMERIC)
+        WHEN unique_user_count > 0 THEN conversion_count / CAST(unique_user_count AS DECIMAL)
         ELSE 0
     END AS conversion_rate,
     CASE
-        WHEN conversion_count > 0 THEN payment_total / CAST(conversion_count AS NUMERIC)
+        WHEN conversion_count > 0 THEN payment_total / CAST(conversion_count AS DECIMAL)
         ELSE 0
     END AS payment_average,
     CASE
-        WHEN unique_user_count > 0 THEN revisit_user_count / CAST(unique_user_count AS NUMERIC)
+        WHEN unique_user_count > 0 THEN revisit_user_count / CAST(unique_user_count AS DECIMAL)
         ELSE 0
     END AS revisit_user_rate,
     CASE
-        WHEN conversion_access_count > 0 THEN payment_total / CAST(conversion_access_count AS NUMERIC)
+        WHEN conversion_access_count > 0 THEN payment_total / CAST(conversion_access_count AS DECIMAL)
         ELSE 0
     END AS payment_contribution_average,
     CASE
-        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS NUMERIC)) * conversion_count
+        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS DECIMAL)) * conversion_count
         ELSE 0
     END AS payment_contribution_total,
     CASE
-        WHEN conversion_count_all > 0 THEN conversion_count_1 / CAST(conversion_count_all AS NUMERIC)
+        WHEN conversion_count_all > 0 THEN conversion_count_1 / CAST(conversion_count_all AS DECIMAL)
         ELSE NULL
     END AS direct_conversion_rate,
     CASE
-        WHEN conversion_count_all > 0 THEN conversion_count_2_or_more / CAST(conversion_count_all AS NUMERIC)
+        WHEN conversion_count_all > 0 THEN conversion_count_2_or_more / CAST(conversion_count_all AS DECIMAL)
         ELSE NULL
     END AS indirect_conversion_rate
 FROM plg_dtb_ad ad
