@@ -39,9 +39,8 @@ class AccessRepository extends EntityRepository
                 ->getSingleScalarResult();
             $Access->setHistory($history);
             $em->persist($Access);
-            $em->flush();
         }
-
+        $em->flush();
         $em->getConnection()->commit();
     }
 
