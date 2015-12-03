@@ -1,0 +1,7 @@
+exclude
+.git
+.idea
+.gitignore
+*.tar
+*.tar.gz
+pack.bat
