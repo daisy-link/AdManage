@@ -44,7 +44,7 @@
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-right">
                                                 <li>
-                                                    <a href="{{ url('admin_media_delete', {id: Media.id}) }}" {{ csrf_token_for_anchor() }}
+                                                    <a href="{{ url('admin_media_delete', {id: Media.id}) }}" {{ ad_manage_csrf_token_for_anchor() }}
                                                        data-method="delete">
                                                         削除
                                                     </a>

@@ -124,7 +124,8 @@
                                                                             </li>
                                                                         {% endif %}
                                                                         <li>
-                                                                            <a href="{{ url('admin_ad_delete', {id: Ad.id}) }}">削除</a>
+                                                                            <a href="{{ url('admin_ad_delete', {id: Ad.id}) }}" {{ ad_manage_csrf_token_for_anchor() }}
+                                                                               data-method="delete">削除</a>
                                                                         </li>
                                                                     </ul>
                                                                 </div>

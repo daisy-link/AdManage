@@ -3,6 +3,7 @@
 namespace Plugin\AdManage\ServiceProvider;
 
 use Eccube\Application;
+use Eccube\Twig\Extension\EccubeExtension;
 use Silex\Application as BaseApplication;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
             $this->initForm($app);
             $this->initDoctrine($app);
             $this->initTranslator($app);
+            $this->initRendering($app);
             $this->initPluginEventDispatcher($app);
             $this->initService($app);
         }
@@ -49,7 +51,7 @@ class AdManageServiceProvider implements ServiceProviderInterface
     {
         $app->after(function (Request $request, Response $response, \Silex\Application $app) {
             $Plugin = $app['eccube.repository.plugin']->findOneBy(array('code' => 'AdManage', 'enable' => '1'));
-            if(!empty($Plugin)) {
+            if (!empty($Plugin)) {
                 $app['eccube.plugin.ad_manage.service.ad']->track($response);
             }
         });
@@ -57,17 +59,21 @@ class AdManageServiceProvider implements ServiceProviderInterface
 
     public function initRoute(BaseApplication $app)
     {
+        $tokenAvailable = method_exists(new EccubeExtension($app), 'getCsrfTokenForAnchor');
+        $delete = $tokenAvailable ?
+            'delete' :
+            'match';
         $app->match('/admin/ad_manage', '\Plugin\AdManage\Controller\AdController::index')
             ->bind('admin_ad');
         $app->match('/admin/ad_manage/{id}', '\Plugin\AdManage\Controller\AdController::index')
             ->assert('id', '^\d+$')
             ->bind('admin_ad_edit');
-        $app->match('/admin/ad_manage/{id}/delete', '\Plugin\AdManage\Controller\AdController::delete')
+        $app->$delete('/admin/ad_manage/{id}/delete', '\Plugin\AdManage\Controller\AdController::delete')
             ->assert('id', '^\d+$')
             ->bind('admin_ad_delete');
         $app->match('/admin/ad_manage/media', '\Plugin\AdManage\Controller\MediaController::index')
             ->bind('admin_media');
-        $app->match('/admin/ad_manage/media/{id}/delete', '\Plugin\AdManage\Controller\MediaController::delete')
+        $app->$delete('/admin/ad_manage/media/{id}/delete', '\Plugin\AdManage\Controller\MediaController::delete')
             ->assert('id', '^\d+$')
             ->bind('admin_media_delete');
         $app->match('/admin/ad_manage/total', '\Plugin\AdManage\Controller\AdController::total')
@@ -132,12 +138,14 @@ class AdManageServiceProvider implements ServiceProviderInterface
                         $config = Yaml::parse($configYml);
                     }
                     $configAll = array_replace_recursive($configAll, $config);
-                    
+
                     $ipYml = $ymlPath . '/exclude_ip.yml';
-                    $configAll['ad_manage_exclude_ip'] = file_exists($ipYml) ? array_filter((array)Yaml::parse($ipYml), 'strlen') : array();
-                    
+                    $configAll['ad_manage_exclude_ip'] = file_exists($ipYml) ? array_filter((array)Yaml::parse($ipYml),
+                        'strlen') : array();
+
                     $uaYml = $ymlPath . '/exclude_ua.yml';
-                    $configAll['ad_manage_exclude_ua'] = file_exists($uaYml) ? array_filter((array)Yaml::parse($uaYml), 'strlen') : array();
+                    $configAll['ad_manage_exclude_ua'] = file_exists($uaYml) ? array_filter((array)Yaml::parse($uaYml),
+                        'strlen') : array();
 
                     return $configAll;
                 }
@@ -177,13 +185,26 @@ class AdManageServiceProvider implements ServiceProviderInterface
     {
         $app['eccube.plugin.ad_manage.service.ad'] = $app->share(function () use ($app) {
             $Plugin = $app['eccube.repository.plugin']->findOneBy(array('code' => 'AdManage', 'enable' => '1'));
-            if(!empty($Plugin)){
+            if (!empty($Plugin)) {
                 return new \Plugin\AdManage\Service\AdService($app);
-            }
-            else{
+            } else {
                 return null;
             }
         });
+    }
+
+    public function initRendering(BaseApplication $app)
+    {
+        $app['twig'] = $app->share(
+            $app->extend(
+                'twig',
+                function (\Twig_Environment $twig, \Silex\Application $app) {
+                    $twig->addExtension(new \Plugin\AdManage\Twig\Extension\AdManageExtension($app));
+
+                    return $twig;
+                }
+            )
+        );
     }
 
     public function boot(BaseApplication $app)
