@@ -18,7 +18,6 @@ Plugin\AdManage\Entity\Conversion:
   oneToOne:
     Order:
       targetEntity: Eccube\Entity\Order
-      inversedBy: Conversion
       joinColumn:
         name: order_id
         referencedColumnName: order_id

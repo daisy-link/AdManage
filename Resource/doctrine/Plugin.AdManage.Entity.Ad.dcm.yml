@@ -34,7 +34,6 @@ Plugin\AdManage\Entity\Ad:
   manyToOne:
     Media:
       targetEntity: Plugin\AdManage\Entity\Media
-      inversedBy: Ads
       joinColumn:
         name: media_id
         referencedColumnName: media_id
