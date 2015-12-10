@@ -2,3 +2,5 @@ eccube.event.app.before:
   - [onAppBefore, NORMAL]
 eccube.event.controller.shopping_complete.before:
   - [onShoppingCompleteBefore, NORMAL]
+eccube.event.controller.shopping_confirm.before:
+  - [onShoppingConfirmBefore, NORMAL]

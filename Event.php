@@ -9,6 +9,7 @@ class Event
 {
 
     protected $app;
+    protected $sessionPreOrderKey = 'eccube.plugin.ad_manage.preorderid';
 
     public function __construct(Application $app)
     {
@@ -23,10 +24,12 @@ class Event
     public function onShoppingCompleteBefore()
     {
         $app = $this->app;
-        $orderId = $app['session']->get('eccube.front.shopping.order.id');
-        if (is_numeric($orderId)) {
+        $preOrderId = $app['session']->get($this->sessionPreOrderKey);
+        $app['session']->remove($this->sessionPreOrderKey);
+        if(is_string($preOrderId) && strlen($preOrderId)){
             /** @var \Eccube\Entity\Order $Order */
-            $Order = $app['eccube.repository.order']->find($orderId);
+            $conditions = array('pre_order_id' => $preOrderId, 'OrderStatus' => $app['config']['order_new']);
+            $Order = $app['eccube.repository.order']->findOneBy($conditions);
             $uniqueId = $app['eccube.plugin.ad_manage.service.ad']->getUniqueId();
             if ($Order && is_string($uniqueId)) {
                 $Conversion = new Conversion();
@@ -38,5 +41,12 @@ class Event
                 $app['eccube.plugin.ad_manage.service.ad']->clear();
             }
         }
+    }
+
+    public function onShoppingConfirmBefore()
+    {
+        $app = $this->app;
+        $preOrderId = $app['eccube.service.cart']->getPreOrderId();
+        $app['session']->set($this->sessionPreOrderKey, $preOrderId);
     }
 }
