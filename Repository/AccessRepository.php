@@ -161,11 +161,16 @@ FROM plg_dtb_media m
                     LEFT JOIN plg_dtb_ad ad
                         ON ac.ad_code = ad.code
                         AND ad.del_flg = 0
+                WHERE NOT (
+                    ac.ad_code IS NOT NULL
+                    AND media_id IS NULL
+                )
             ) ac
                 LEFT JOIN plg_dtb_conversion c
                     ON ac.unique_id = c.unique_id
                 LEFT JOIN dtb_order o
                     ON c.order_id = o.order_id
+                    AND o.del_flg = 0
                     AND $orderWhere
             WHERE $where
             GROUP BY ac.media_id, ac.unique_id
