@@ -59,6 +59,8 @@ class AdController
                 'Ads' => $Ads,
                 'EditAd' => $EditAd,
                 'medium' => $medium,
+                'url' => sprintf('http://%s%s?%s=', $_SERVER['SERVER_NAME'], $app['config']['root_urlpath'],
+                    $app['config']['ad_code_url_key']),
             )
         );
     }
@@ -97,7 +99,7 @@ class AdController
 
             $form->handleRequest($request);
             if ($form->isValid()) {
-                
+
                 $search = true;
                 $data = $form->getData();
                 $medium = $app['eccube.plugin.ad_manage.repository.media']->getList();

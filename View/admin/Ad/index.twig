@@ -84,7 +84,7 @@
                                             <tr>
                                                 <th class="alignR">媒体ID</th>
                                                 <th>媒体グループ</th>
-                                                <th>媒体コード</th>
+                                                <th>媒体コード / URL例</th>
                                                 <th>媒体名</th>
                                                 <th>&nbsp;</th>
                                             </tr>
@@ -100,7 +100,8 @@
                                                             {{ Ad.Media }}
                                                         </td>
                                                         <td>
-                                                            {{ Ad.code }}
+                                                            {{ Ad.code }}<br />
+                                                            {{ url }}{{ Ad.code }}
                                                         </td>
                                                         <td>
                                                             <a href="{{ editUrl }}">{{ Ad.name }}</a>
