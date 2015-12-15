@@ -99,7 +99,7 @@ SELECT
         ELSE 0
     END AS revisit_user_rate,
     CASE
-        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS DECIMAL)) * conversion_count
+        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS DECIMAL)) * conversion_count_all
         ELSE 0
     END AS payment_contribution_total,
     CASE
@@ -149,13 +149,6 @@ FROM plg_dtb_media m
                             INNER JOIN dtb_order o
                                 USING(order_id)
                         WHERE ac.unique_id = conversion_ac.unique_id
-                        AND (
-                            ac.ad_code = conversion_ac.ad_code
-                            OR (
-                                ac.ad_code IS NULL
-                                AND conversion_ac.ad_code IS NULL
-                            )
-                        )
                     ), 0) AS user_conversion_access_count
                 FROM plg_dtb_access ac
                     LEFT JOIN plg_dtb_ad ad
@@ -251,7 +244,7 @@ SELECT
         ELSE 0
     END AS payment_contribution_average,
     CASE
-        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS DECIMAL)) * conversion_count
+        WHEN conversion_access_count > 0 THEN (payment_total / CAST(conversion_access_count AS DECIMAL)) * conversion_count_all
         ELSE 0
     END AS payment_contribution_total,
     CASE
@@ -312,13 +305,6 @@ FROM plg_dtb_ad ad
                             INNER JOIN dtb_order o
                                 USING(order_id)
                         WHERE ac.unique_id = conversion_ac.unique_id
-                        AND (
-                            ac.ad_code = conversion_ac.ad_code
-                            OR (
-                                ac.ad_code IS NULL
-                                AND conversion_ac.ad_code IS NULL
-                            )
-                        )
                     ), 0) AS user_conversion_access_count
                 FROM plg_dtb_access ac
             ) ac
