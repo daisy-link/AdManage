@@ -160,7 +160,7 @@ FROM plg_dtb_media m
                 FROM plg_dtb_access ac
                     LEFT JOIN plg_dtb_ad ad
                         ON ac.ad_code = ad.code
-                WHERE ad.del_flg = 0
+                        AND ad.del_flg = 0
             ) ac
                 LEFT JOIN plg_dtb_conversion c
                     ON ac.unique_id = c.unique_id
