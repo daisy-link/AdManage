@@ -138,6 +138,11 @@
                                             <tr>
                                                 <td>
                                                     {{ media.name }}
+                                                    {% if media.media_id == -2 %}
+                                                        <svg class="cb cb-info-circle" title="広告なし・ノーリファラーのアクセス"><use xlink:href="#cb-info-circle" /></svg>
+                                                    {% elseif media.media_id == -1 %}
+                                                        <svg class="cb cb-info-circle" title="広告なし・リファラーありのアクセス"><use xlink:href="#cb-info-circle" /></svg>
+                                                    {% endif %}
                                                 </td>
                                                 <td class="text-right">
                                                     {{ media.access_count|number_format(0, '.', ',') }}
