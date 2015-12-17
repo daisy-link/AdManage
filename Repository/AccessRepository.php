@@ -81,11 +81,7 @@ class AccessRepository extends EntityRepository
         $sql = <<<EOSQL
 SELECT
     *,
-    CASE ac.media_id
-        WHEN -2 THEN '直接 (Direct)'
-        WHEN -1 THEN '間接 (Referrer)'
-        ELSE name
-    END AS media_name,
+    m.media_id AS media_id,
     CASE
         WHEN unique_user_count > 0 THEN conversion_count / CAST(unique_user_count AS DECIMAL)
         ELSE 0
@@ -106,8 +102,12 @@ SELECT
         WHEN conversion_access_count > 0 THEN payment_total / CAST(conversion_access_count AS DECIMAL)
         ELSE 0
     END AS payment_contribution_average
-FROM plg_dtb_media m
-    RIGHT JOIN (
+FROM (
+    SELECT media_id, name, del_flg FROM plg_dtb_media
+    UNION ALL SELECT -2, '直接 (Direct)', 0
+    UNION ALL SELECT -1, '間接 (Referrer)', 0
+) m
+    LEFT JOIN (
         SELECT
             ac.media_id,
             SUM(user_access_count) AS access_count,
@@ -173,6 +173,7 @@ FROM plg_dtb_media m
         ON m.media_id = ac.media_id
 WHERE del_flg = 0
 OR del_flg IS NULL
+ORDER BY m.media_id ASC
 EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()
@@ -320,6 +321,7 @@ FROM plg_dtb_ad ad
     ) ac
         ON ad.code = ac.ad_code
 WHERE del_flg = 0
+ORDER BY ad.media_id ASC, ad.ad_id ASC
 EOSQL;
         $stmt = $this->getEntityManager()
             ->getConnection()
