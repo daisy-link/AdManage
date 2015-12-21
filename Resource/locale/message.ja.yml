@@ -1,0 +1,12 @@
+admin.ad_manage.ad.save.success: 広告媒体を登録しました。
+admin.ad_manage.ad.save.failure: 広告媒体の登録に失敗しました。
+admin.ad_manage.ad.delete.success: 広告媒体を削除しました。
+admin.ad_manage.ad.delete.failure: 広告媒体の削除に失敗しました。
+admin.ad_manage.media.save.success: 広告媒体グループを登録しました。
+admin.ad_manage.media.save.failure: 広告媒体グループの登録に失敗しました。
+admin.ad_manage.media.delete.success: 広告媒体グループを削除しました。
+admin.ad_manage.media.delete.failure: 広告媒体グループの削除に失敗しました。
+
+form.type.ad_code.invalid: 使用できる文字は半角英数字と-_.のみです。
+form.type.ad_code.duplicated: 媒体コードが重複しています。 (削除済み含む)
+form.type.ad_code.unmodifiable: 媒体コードは修正できません。

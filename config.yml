@@ -6,4 +6,3 @@ service:
   - AdManageServiceProvider
 orm.path:
   - /Resource/doctrine
-  - /Resource/doctrine/master

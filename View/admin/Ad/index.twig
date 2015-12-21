@@ -1,0 +1,154 @@
+{% extends 'default_frame.twig' %}
+
+{% set menus = ['content', 'ad_master'] %}
+
+{% block title %}コンテンツ管理{% endblock %}
+{% block sub_title %}媒体管理{% endblock %}
+
+{% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block main %}
+    <form role="form" name="form1" id="form1" method="post" action="" novalidate enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="box form-horizontal">
+                    <div class="box-header">
+                        <h3 class="box-title">基本情報</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ form_widget(form._token) }}
+                        {{ form_row(form.id) }}
+                        {{ form_row(form.name) }}
+                        <div class="form-group {% if form.code.vars.valid == false %}has-error{% endif %}">
+                            {{ form_label(form.code) }}
+                            <div class="col-sm-10">
+                                {{ form_widget(form.code) }}
+                                {{ form_errors(form.code) }}
+                                <span class="small text-danger">媒体コードは重複と登録後の修正ができません。</span>
+                            </div>
+                        </div>
+                        <div class="form-group {% if form.Media.vars.valid == false %}has-error{% endif %}">
+                            {{ form_label(form.Media) }}
+                            <div class="col-sm-10">
+                                {{ form_widget(form.Media) }}
+                                {{ form_errors(form.Media) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box form-horizontal">
+                    <div class="col_inner" id="aside_column">
+                        <div class="box no-header">
+                            <div class="box-body">
+                                <div class="row text-center">
+                                    <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                        <button class="btn btn-primary btn-block btn-lg"
+                                                onclick="document.form1.submit();">広告媒体を登録
+                                        </button>
+                                    </div>
+                                </div>
+                                {% if EditAd.id is not null %}
+                                    <div class="row text-center marT10">
+                                        <div class="col-sm-6 col-sm-offset-3 col-md-12 col-md-offset-0">
+                                            <button type="button" class="btn btn-default btn-block btn-lg"
+                                                    onclick="location.href='{{ url('admin_ad') }}';">
+                                                編集を中止
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if Ads|length > 0%}
+                    {% for mediaId, media in Ads %}
+                        <div class="box">
+                            <div class="box-header with-arrow">
+                                {{ medium[mediaId] }}
+                            </div>
+                            <div class="box-body">
+                                <div class="table_list">
+                                    <div class="table-responsive">
+                                        <table id="ads" class="ad-summary table tableish-striped table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th class="alignR">媒体ID</th>
+                                                <th>媒体グループ</th>
+                                                <th>媒体コード / URL例</th>
+                                                <th>媒体名</th>
+                                                <th>&nbsp;</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for Ad in media %}
+                                                    {% set editUrl = url('admin_ad_edit', {id: Ad.id}) %}
+                                                    <tr class="{% if Ad.id == EditAd.id %}warning {% endif %}">
+                                                        <td class="alignR">
+                                                            {{ Ad.id }}
+                                                        </td>
+                                                        <td>
+                                                            {{ Ad.Media }}
+                                                        </td>
+                                                        <td>
+                                                            {{ Ad.code }}<br />
+                                                            {{ url }}{{ Ad.code }}
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ editUrl }}">{{ Ad.name }}</a>
+                                                        </td>
+                                                        <td>
+                                                            <div class="icon_edit">
+                                                                <div class="dropdown">
+                                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                                        <svg class="cb cb-ellipsis-h">
+                                                                            <use xlink:href="#cb-ellipsis-h"/>
+                                                                        </svg>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                                        {% if Ad.id == EditAd.id %}
+                                                                            <li>
+                                                                                <a>編集中</a>
+                                                                            </li>
+                                                                        {% else %}
+                                                                            <li>
+                                                                                <a href="{{ editUrl }}">編集</a>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                        <li>
+                                                                            <a href="{{ url('admin_ad_delete', {id: Ad.id}) }}" {{ ad_manage_csrf_token_for_anchor() }}
+                                                                               data-method="delete">削除</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="box">
+                        <div class="box-header with-arrow">
+                            <h3 class="box-title with-arrow">データがありませんでした。</h3>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+{% endblock %}

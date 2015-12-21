@@ -1,0 +1,30 @@
+Plugin\AdManage\Entity\Media:
+  type: entity
+  table: plg_dtb_media
+  repositoryClass: Plugin\AdManage\Repository\MediaRepository
+  id:
+    id:
+      type: integer
+      nullable: false
+      unsigned: false
+      id: true
+      column: media_id
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: text
+      nullable: true
+    create_date:
+      type: datetime
+      nullable: false
+    update_date:
+      type: datetime
+      nullable: false
+    del_flg:
+      type: smallint
+      nullable: false
+      unsigned: false
+      options:
+        default: '0'
+  lifecycleCallbacks: {  }

@@ -1,0 +1,64 @@
+{% extends 'default_frame.twig' %}
+
+{% set menus = ['content', 'media_master'] %}
+
+{% block title %}コンテンツ管理{% endblock %}
+{% block sub_title %}媒体グループ管理{% endblock %}
+
+{% form_theme form 'Form/bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block javascript %}
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="form-inline col-md-12">
+                            <form role="form" class="form-horizontal" name="form1" id="form1" method="post"
+                                  enctype="multipart/form-data">
+                                {{ form_widget(form._token) }}
+                                {{ form_widget(form.name, {attr: {placeholder: '媒体グループ名を入力'}}) }}
+                                {{ form_errors(form.name) }}
+                                <button class="btn btn-default btn-sm" type="submit">媒体グループ作成</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% if Medium|length > 0 %}
+                    <div class="box-body no-padding no-border">
+                        <div class="tableish">
+                            {% for Media in Medium %}
+                                <div class="item_box tr">
+                                    <div class="item_pattern td">
+                                        {{ Media.name }}
+                                    </div>
+                                    <div class="icon_edit td">
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                                <svg class="cb cb-ellipsis-h">
+                                                    <use xlink:href="#cb-ellipsis-h"/>
+                                                </svg>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li>
+                                                    <a href="{{ url('admin_media_delete', {id: Media.id}) }}" {{ ad_manage_csrf_token_for_anchor() }}
+                                                       data-method="delete">
+                                                        削除
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
