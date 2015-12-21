@@ -17,9 +17,6 @@ class AdService
     /** @var Request */
     protected $request;
 
-    /** @var Response */
-    protected $response;
-
     protected $tracked = false;
     protected $clear = false;
 
@@ -30,7 +27,6 @@ class AdService
     {
         $this->app = $app;
         $this->request = $this->app['request'];
-        $this->response = new Response();
     }
 
     /**
@@ -48,8 +44,8 @@ class AdService
      */
     protected function _clear(Response $response)
     {
-        $response->headers->setCookie(new Cookie(self::UNIQUE_ID_KEY, null));
-        $response->headers->setCookie(new Cookie(self::LAST_ACCESS_TIME_KEY, null));
+        $response->headers->clearCookie(self::UNIQUE_ID_KEY);
+        $response->headers->clearCookie(self::LAST_ACCESS_TIME_KEY);
     }
 
     /**
