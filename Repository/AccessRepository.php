@@ -139,7 +139,7 @@ FROM (
                         SELECT *
                         FROM plg_dtb_access old_ac
                         WHERE ac.unique_id = old_ac.unique_id
-                        AND ac.access_id > old_ac.access_id
+                        AND ac.history < old_ac.history
                     ) THEN 1 ELSE 0 END AS is_revisit,
                     COALESCE((
                         SELECT COUNT(1)
@@ -296,7 +296,7 @@ FROM plg_dtb_ad ad
                         SELECT *
                         FROM plg_dtb_access old_ac
                         WHERE ac.unique_id = old_ac.unique_id
-                        AND ac.access_id > old_ac.access_id
+                        AND ac.history < old_ac.history
                     ) THEN 1 ELSE 0 END AS is_revisit,
                     COALESCE((
                         SELECT COUNT(1)
