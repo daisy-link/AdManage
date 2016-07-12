@@ -63,20 +63,21 @@ class AdManageServiceProvider implements ServiceProviderInterface
         $delete = $tokenAvailable ?
             'delete' :
             'match';
-        $app->match('/admin/ad_manage', '\Plugin\AdManage\Controller\AdController::index')
+        $admin_route = $app['config']['admin_route'];
+        $app->match(sprintf('/%s/ad_manage', $admin_route), '\Plugin\AdManage\Controller\AdController::index')
             ->bind('admin_ad');
-        $app->match('/admin/ad_manage/{id}', '\Plugin\AdManage\Controller\AdController::index')
+        $app->match(sprintf('/%s/ad_manage/{id}', $admin_route), '\Plugin\AdManage\Controller\AdController::index')
             ->assert('id', '^\d+$')
             ->bind('admin_ad_edit');
-        $app->$delete('/admin/ad_manage/{id}/delete', '\Plugin\AdManage\Controller\AdController::delete')
+        $app->$delete(sprintf('/%s/ad_manage/{id}/delete', $admin_route), '\Plugin\AdManage\Controller\AdController::delete')
             ->assert('id', '^\d+$')
             ->bind('admin_ad_delete');
-        $app->match('/admin/ad_manage/media', '\Plugin\AdManage\Controller\MediaController::index')
+        $app->match(sprintf('/%s/ad_manage/media', $admin_route), '\Plugin\AdManage\Controller\MediaController::index')
             ->bind('admin_media');
-        $app->$delete('/admin/ad_manage/media/{id}/delete', '\Plugin\AdManage\Controller\MediaController::delete')
+        $app->$delete(sprintf('/%s/ad_manage/media/{id}/delete', $admin_route), '\Plugin\AdManage\Controller\MediaController::delete')
             ->assert('id', '^\d+$')
             ->bind('admin_media_delete');
-        $app->match('/admin/ad_manage/total', '\Plugin\AdManage\Controller\AdController::total')
+        $app->match(sprintf('/%s/ad_manage/total', $admin_route), '\Plugin\AdManage\Controller\AdController::total')
             ->bind('admin_ad_total');
     }
 
