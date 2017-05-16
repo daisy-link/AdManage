@@ -313,6 +313,7 @@ FROM plg_dtb_ad ad
                     ON ac.unique_id = c.unique_id
                 LEFT JOIN dtb_order o
                     ON c.order_id = o.order_id
+                    AND o.del_flg = 0
                     AND $orderWhere
             WHERE $where
             GROUP BY ac.ad_code, ac.unique_id
